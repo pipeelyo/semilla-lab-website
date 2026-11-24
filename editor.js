@@ -2,23 +2,17 @@
 (async () => {
   if (!new URLSearchParams(location.search).has('editar')) return;
 
-  const PAGES = { index: 'Inicio', servicios: 'Servicios', 'metodologia-cultivar': 'Metodología Cultivar', 'casos-de-exito': 'Casos de Éxito', 'diagnostico-gratis': 'Diagnóstico Gratis' };
-  const slug = location.pathname.replace(/^\/(pages\/)?|\.html$/g, '') || 'index';
-  if (!PAGES[slug]) return;
+  // Original pages: the section library is built from their designs.
+  const BUILTIN = { index: 'Inicio', servicios: 'Servicios', 'metodologia-cultivar': 'Metodología Cultivar', 'casos-de-exito': 'Casos de Éxito', 'diagnostico-gratis': 'Diagnóstico Gratis' };
+  const slug = location.pathname.replace(/^\/|\/$/g, '') || 'index';
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) return;
 
-  let pass = sessionStorage.getItem('cms-pass');
-  const api = (url, body, type) =>
-    fetch(url, { method: 'POST', headers: { 'x-editor-password': encodeURIComponent(pass || ''), 'content-type': type }, body });
-
-  for (;;) {
-    pass = pass || prompt('Contraseña de editor');
-    if (!pass) return;
-    const r = await api('/api/save', '{}', 'application/json');
-    if (r.ok) break;
-    alert('Contraseña incorrecta');
-    pass = null;
-  }
-  sessionStorage.setItem('cms-pass', pass);
+  // The session lives in an HttpOnly cookie set by /admin; without it, go log in first.
+  const { loggedIn } = await (await fetch('/api/login', { cache: 'no-store' })).json();
+  if (!loggedIn) return location.replace(`/admin?next=${encodeURIComponent(location.pathname + location.search)}`);
+  const PAGES = Object.fromEntries((await (await fetch('/api/pages', { cache: 'no-store' })).json()).map((p) => [p.slug, p.title]));
+  const api = (url, body, type) => fetch(url, { method: 'POST', headers: { 'content-type': type }, body });
+  const esc = (t) => String(t).replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
 
   // --- UI ---------------------------------------------------------------
   const css = document.createElement('style');
@@ -73,6 +67,7 @@
     #cms-bar .cms-legend b{color:#fff;border-radius:4px;padding:0 5px}
     #cms-bar{position:fixed;bottom:16px;right:16px;z-index:9999;display:flex;gap:8px;align-items:center;background:#fff;border:1px solid #d6d3d1;border-radius:12px;padding:8px 12px;box-shadow:0 6px 24px #0003;font:14px system-ui,sans-serif;color:#1c1917}
     #cms-bar button,#cms-bar select{font:inherit;border-radius:8px;padding:6px 12px;border:1px solid #d6d3d1;background:#fff;cursor:pointer}
+    #cms-bar a.cms-panel{color:#15803d;font-weight:600;text-decoration:none;padding:6px 4px}
     #cms-bar .cms-save{background:#14532d;color:#fff;border-color:#14532d}
     #cms-bar .cms-save:disabled{opacity:.5;cursor:default}`;
   document.head.append(css);
@@ -82,10 +77,11 @@
   bar.dataset.cms = '';
   bar.innerHTML = `
     <strong>Editor</strong>
-    <select aria-label="Página">${Object.entries(PAGES).map(([s, n]) => `<option value="${s}"${s === slug ? ' selected' : ''}>${n}</option>`).join('')}</select>
+    <select aria-label="Página">${Object.entries(PAGES).map(([s, n]) => `<option value="${s}"${s === slug ? ' selected' : ''}>${esc(n)}</option>`).join('')}</select>
     <span class="cms-legend">Pasa el mouse sobre un bloque: <b style="background:#15803d">⠿ Mover</b><b style="background:#15803d">＋ Duplicar</b><b style="background:#b91c1c">✕</b> · <b style="background:#c2410c">Sección</b></span>
     <span class="cms-status" aria-live="polite">Sin cambios</span>
     <button class="cms-save" disabled>Guardar</button>
+    <a class="cms-panel" href="/admin">Panel</a>
     <button class="cms-exit">Salir</button>`;
   document.body.append(bar);
   const statusEl = bar.querySelector('.cms-status');
@@ -98,6 +94,11 @@
 
   bar.querySelector('select').onchange = (e) => (location.href = `/${e.target.value === 'index' ? '' : e.target.value}?editar`);
   bar.querySelector('.cms-exit').onclick = () => (location.href = location.pathname);
+
+  // Changes stay on screen: log in again in another tab, then press Guardar again.
+  function sessionExpired() {
+    statusEl.innerHTML = 'Tu sesión expiró. <a href="/admin" target="_blank" rel="noopener" style="color:#15803d;font-weight:600">Inicia sesión aquí</a> y vuelve a presionar Guardar.';
+  }
 
   // --- Texts ------------------------------------------------------------
   const makeEditable = (root) => {
@@ -131,6 +132,7 @@
       if (file.size > 4e6) return alert('La imagen pesa más de 4 MB. Redúcela e intenta de nuevo.');
       status('Subiendo imagen…');
       const r = await api(`/api/upload?name=${encodeURIComponent(file.name)}`, file, file.type);
+      if (r.status === 401) return sessionExpired();
       if (!r.ok) return status(`Error al subir la imagen (${r.status})`);
       img.src = (await r.json()).url;
       img.removeAttribute('srcset');
@@ -235,7 +237,7 @@
 
   // --- Section library: every section design from the original pages -----
   let library;
-  const loadLibrary = () => (library ||= Promise.all(Object.entries(PAGES).map(async ([s, name]) => {
+  const loadLibrary = () => (library ||= Promise.all(Object.entries(BUILTIN).map(async ([s, name]) => {
     const doc = new DOMParser().parseFromString(await (await fetch(`/pages/${s}.html`)).text(), 'text/html');
     const scripts = [...doc.body.querySelectorAll('script:not([src])')].map((x) => x.textContent);
     return [...doc.querySelectorAll('main section')].map((sec) => ({
@@ -399,7 +401,7 @@
       <div class="cms-link-form">
         <label>¿A dónde debe llevar este botón?
           <select class="cms-kind">
-            <optgroup label="Páginas del sitio">${Object.entries(PAGES).map(([s, n]) => `<option value="${pagePath(s)}">${n}</option>`).join('')}</optgroup>
+            <optgroup label="Páginas del sitio">${Object.entries(PAGES).map(([s, n]) => `<option value="${pagePath(s)}">${esc(n)}</option>`).join('')}</optgroup>
             <option value="wa">WhatsApp</option>
             <option value="sec">Una sección de esta página</option>
             <option value="url">Otra dirección (sitio externo, correo, teléfono)</option>
@@ -470,6 +472,7 @@
     status('Guardando…');
     const r = await api('/api/save', JSON.stringify({ slug, html: clone.innerHTML }), 'application/json');
     if (r.ok) { dirty = false; status('Guardado ✓ (visible en ~1 min)'); }
+    else if (r.status === 401) { saveBtn.disabled = false; sessionExpired(); }
     else { saveBtn.disabled = false; status(`Error al guardar (${r.status})`); }
   };
 })();

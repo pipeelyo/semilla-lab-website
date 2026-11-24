@@ -1,11 +1,10 @@
 import { put } from '@vercel/blob';
-import { SLUGS, authorized, deny } from './_lib.js';
+import { SLUGS, authorized, deny, isValidNewSlug } from './_lib.js';
 
 export async function POST(req) {
   if (!authorized(req)) return deny();
   const { slug, html } = await req.json().catch(() => ({}));
-  if (html === undefined) return Response.json({ ok: true }); // password check only
-  if (!SLUGS.includes(slug) || typeof html !== 'string' || !html.trim()) {
+  if (!(SLUGS.includes(slug) || isValidNewSlug(slug)) || typeof html !== 'string' || !html.trim()) {
     return new Response('Datos inválidos', { status: 400 });
   }
   const opts = { access: 'public', contentType: 'text/html; charset=utf-8' };

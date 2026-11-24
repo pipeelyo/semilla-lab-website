@@ -2,7 +2,13 @@
   "cleanUrls": true,
   "rewrites": [
     { "source": "/", "destination": "/api/render?slug=index" },
-    { "source": "/:slug(servicios|metodologia-cultivar|casos-de-exito|diagnostico-gratis)", "destination": "/api/render?slug=:slug" }
+    { "source": "/:slug([a-z0-9-]+)", "destination": "/api/render?slug=:slug" }
   ],
-  "functions": { "api/render.js": { "includeFiles": "pages/**" } }
+  "headers": [
+    { "source": "/admin", "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }, { "key": "Cache-Control", "value": "no-store" }] }
+  ],
+  "functions": {
+    "api/render.js": { "includeFiles": "{pages/**,404.html}" },
+    "api/pages.js": { "includeFiles": "pages/**" }
+  }
 }

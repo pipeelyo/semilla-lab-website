@@ -1,23 +1,22 @@
-import { readFile } from 'node:fs/promises';
-import path from 'node:path';
-import { SLUGS, mergeBody } from './_lib.js';
+import { SLUGS, SLUG_RE, escapeHtml, isValidNewSlug, mergeBody, pageTemplate, readTemplate, savedBody, titleOf } from './_lib.js';
+
+const html = (body, status = 200, cache = 'public, s-maxage=10, stale-while-revalidate=60') =>
+  new Response(body, { status, headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': cache } });
 
 export async function GET(req) {
-  const slug = new URL(req.url).searchParams.get('slug');
-  if (!SLUGS.includes(slug)) return new Response('No encontrado', { status: 404 });
+  const slug = new URL(req.url).searchParams.get('slug') || '';
+  const notFound = async () => html(await readTemplate('404.html'), 404, 'public, s-maxage=10');
 
-  let html = await readFile(path.join(process.cwd(), 'pages', `${slug}.html`), 'utf8');
-  const base = process.env.BLOB_BASE_URL;
-  if (base) {
-    try {
-      const r = await fetch(`${base}/pages/${slug}.html`, { cache: 'no-store' });
-      if (r.ok) html = mergeBody(html, await r.text());
-    } catch {} // Blob unreachable: serve the original page instead of an error.
+  if (SLUGS.includes(slug)) {
+    const template = await pageTemplate(slug);
+    const body = await savedBody(slug);
+    return html(body ? mergeBody(template, body) : template);
   }
-  return new Response(html, {
-    headers: {
-      'content-type': 'text/html; charset=utf-8',
-      'cache-control': 'public, s-maxage=10, stale-while-revalidate=60',
-    },
-  });
+  if (!SLUG_RE.test(slug) || !isValidNewSlug(slug)) return notFound();
+
+  // Page created from the admin panel: index shell + saved body, titled after its first heading.
+  const body = await savedBody(slug);
+  if (!body) return notFound();
+  const title = titleOf(body) || slug;
+  return html(mergeBody(await pageTemplate('index'), body).replace(/<title>[\s\S]*?<\/title>/i, `<title>${escapeHtml(title)} | Semilla Lab</title>`));
 }

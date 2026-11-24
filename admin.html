@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="robots" content="noindex"/>
+<title>Panel | Semilla Lab</title>
+<link rel="icon" href="/logo.png"/>
+<style>
+  :root{--green:#003617;--green2:#15803d;--soft:#eaf7ed;--line:#d9e6dc;--muted:#5b665e;--orange:#f59d22;--red:#b91c1c}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;background:#f0fdf3;font:15px/1.5 Inter,system-ui,sans-serif;color:#131e18}
+  header{display:flex;align-items:center;gap:12px;padding:14px 24px;background:#fff;border-bottom:1px solid var(--line)}
+  header img{height:36px}
+  header strong{font-size:17px;color:var(--green)}
+  header small{display:block;color:var(--muted)}
+  header .grow{flex:1}
+  main{max-width:960px;margin:32px auto;padding:0 20px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px;box-shadow:0 1px 8px #1b4d2b0f}
+  h1{font-size:24px;margin:0 0 4px;color:var(--green)}
+  h2{font-size:18px;margin:0 0 12px;color:var(--green)}
+  p.muted{color:var(--muted);margin:0 0 16px}
+  label{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:14px}
+  input,select{font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff}
+  input:focus,select:focus,button:focus-visible,a:focus-visible{outline:3px solid #9ed3a6;outline-offset:1px}
+  button,.btn{font:inherit;font-weight:600;border:0;border-radius:999px;padding:9px 18px;cursor:pointer;background:var(--green);color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+  button.light,.btn.light{background:var(--soft);color:var(--green)}
+  button.danger{background:#fee2e2;color:var(--red)}
+  button:disabled{opacity:.5;cursor:default}
+  .err{color:var(--red);min-height:1.5em;margin:8px 0 0}
+  #login{max-width:400px;margin:10vh auto}
+  #login form{display:flex;flex-direction:column;gap:14px}
+  table{width:100%;border-collapse:collapse}
+  td,th{padding:12px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+  th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+  td.actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+  code{background:var(--soft);padding:2px 6px;border-radius:6px;font-size:13px}
+  .tag{font-size:12px;color:var(--muted)}
+  #nueva form{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:end}
+  #nueva .full{grid-column:1/-1}
+  .slug{display:flex;align-items:center;border:1px solid var(--line);border-radius:10px;background:#fff;padding-left:12px}
+  .slug span{color:var(--muted);font-weight:400}
+  .slug input{border:0;flex:1;padding-left:2px}
+  section+section{margin-top:24px}
+  [hidden]{display:none!important}
+  @media (max-width:640px){#nueva form{grid-template-columns:1fr}td.actions{justify-content:flex-start}}
+</style>
+</head>
+<body>
+<header>
+  <img src="/logo.png" alt=""/>
+  <div class="grow"><strong>Semilla Lab</strong><small>Panel de contenido</small></div>
+  <a class="btn light" href="/" target="_blank" rel="noopener">Ver sitio ↗</a>
+  <button class="light" id="salir" hidden>Cerrar sesión</button>
+</header>
+
+<main>
+  <section id="login" class="card" hidden>
+    <h1>Iniciar sesión</h1>
+    <p class="muted">Ingresa la contraseña de editor para modificar el sitio.</p>
+    <form>
+      <label>Contraseña<input type="password" name="password" autocomplete="current-password" required autofocus/></label>
+      <button type="submit">Entrar</button>
+      <p class="err" role="alert"></p>
+    </form>
+  </section>
+
+  <div id="panel" hidden>
+    <section class="card">
+      <h1>Páginas del sitio</h1>
+      <p class="muted">Edita el contenido de cada página o crea una nueva. Los cambios guardados se ven en el sitio en aproximadamente 1 minuto.</p>
+      <table>
+        <thead><tr><th>Página</th><th>Dirección</th><th></th></tr></thead>
+        <tbody id="lista"><tr><td colspan="3">Cargando…</td></tr></tbody>
+      </table>
+    </section>
+
+    <section class="card" id="nueva">
+      <h2>Crear página nueva</h2>
+      <p class="muted">Empieza en blanco (con el encabezado y pie del sitio) o como copia de una página existente, y luego constrúyela con «＋ Nueva sección».</p>
+      <form>
+        <label>Título<input name="title" maxlength="100" placeholder="Ej: Nosotros" required/></label>
+        <label>Dirección
+          <span class="slug"><span>semilla-lab…/</span><input name="slug" maxlength="60" pattern="[a-z0-9]+(-[a-z0-9]+)*" title="Solo minúsculas, números y guiones" placeholder="nosotros" required/></span>
+        </label>
+        <label class="full">Empezar desde<select name="base"><option value="blank">Página en blanco (encabezado + pie)</option></select></label>
+        <div class="full"><button type="submit">Crear y empezar a editar</button><p class="err" role="alert"></p></div>
+      </form>
+    </section>
+  </div>
+</main>
+
+<script>
+(() => {
+  const $ = (q) => document.querySelector(q);
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
+  const href = (slug) => (slug === 'index' ? '/' : `/${slug}`);
+  // Only same-site paths, so the login can't be used to bounce people to another site.
+  const next = (() => { const n = new URLSearchParams(location.search).get('next') || ''; return /^\/(?!\/)/.test(n) ? n : ''; })();
+
+  async function start() {
+    const { loggedIn } = await (await fetch('/api/login', { cache: 'no-store' })).json();
+    if (loggedIn && next) return location.replace(next);
+    $('#login').hidden = loggedIn;
+    $('#panel').hidden = $('#salir').hidden = !loggedIn;
+    if (loggedIn) loadPages();
+  }
+
+  $('#login form').onsubmit = async (e) => {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    btn.disabled = true;
+    $('#login .err').textContent = '';
+    const r = await fetch('/api/login', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ password: e.target.password.value }) });
+    btn.disabled = false;
+    if (!r.ok) { $('#login .err').textContent = 'Contraseña incorrecta.'; e.target.password.select(); return; }
+    e.target.reset();
+    start();
+  };
+
+  $('#salir').onclick = async () => { await fetch('/api/login', { method: 'DELETE' }); location.replace('/admin'); };
+
+  async function loadPages() {
+    const r = await fetch('/api/pages', { cache: 'no-store' });
+    if (r.status === 401) return start();
+    const pages = await r.json();
+    $('#lista').innerHTML = pages.map((p) => `
+      <tr>
+        <td><strong>${esc(p.title)}</strong><br><span class="tag">${p.builtin ? 'Página del sitio' : 'Creada en el panel'}</span></td>
+        <td><code>${esc(href(p.slug))}</code></td>
+        <td class="actions">
+          <a class="btn" href="${esc(href(p.slug))}?editar">✎ Editar</a>
+          <a class="btn light" href="${esc(href(p.slug))}" target="_blank" rel="noopener">Ver ↗</a>
+          ${p.builtin ? '' : `<button class="danger" data-del="${esc(p.slug)}" data-title="${esc(p.title)}">Eliminar</button>`}
+        </td>
+      </tr>`).join('');
+    const base = $('#nueva select');
+    base.length = 1;
+    pages.forEach((p) => base.add(new Option(`Copia de «${p.title}»`, p.slug)));
+  }
+
+  $('#lista').onclick = async (e) => {
+    const b = e.target.closest('[data-del]');
+    if (!b || !confirm(`¿Eliminar la página «${b.dataset.title}»? Se guarda una copia de respaldo, pero dejará de verse en el sitio.`)) return;
+    b.disabled = true;
+    const r = await fetch(`/api/pages?slug=${encodeURIComponent(b.dataset.del)}`, { method: 'DELETE' });
+    if (!r.ok) { alert(await r.text()); b.disabled = false; return; }
+    loadPages();
+  };
+
+  // Suggest the address from the title until the user edits it.
+  let slugTouched = false;
+  const form = $('#nueva form');
+  form.slug.oninput = () => (slugTouched = true);
+  form.title.oninput = () => {
+    if (!slugTouched) form.slug.value = form.title.value.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
+  };
+  form.onsubmit = async (e) => {
+    e.preventDefault();
+    const btn = form.querySelector('button');
+    btn.disabled = true;
+    form.querySelector('.err').textContent = '';
+    const r = await fetch('/api/pages', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ title: form.title.value, slug: form.slug.value, base: form.base.value }) });
+    btn.disabled = false;
+    if (!r.ok) { form.querySelector('.err').textContent = await r.text(); return; }
+    location.href = `/${form.slug.value}?editar`;
+  };
+
+  start().catch(() => { $('#login').hidden = false; $('#login .err').textContent = 'No se pudo conectar. Recarga la página.'; });
+})();
+</script>
+</body>
+</html>
