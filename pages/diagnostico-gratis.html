@@ -509,6 +509,7 @@
   const selectedTools = new Set();
 
   function updateWizardUI() {
+    if (typeof clearNotices === "function") clearNotices();
     // Hide all step content
     for (let i = 1; i <= totalSteps; i++) {
       const stepElem = document.getElementById('step-' + i);
@@ -594,21 +595,47 @@
     document.getElementById('selected-company-size').value = sizeValue;
   }
 
+  // In-page notice instead of the browser's alert(): styled like the site, next to the step's button.
+  function notify(message, field) {
+    const step = document.getElementById('step-' + currentStep);
+    if (!step) return;
+    let box = step.querySelector('.form-notice');
+    if (!box) {
+      box = document.createElement('div');
+      box.className = 'form-notice flex items-start gap-space-sm p-space-md rounded-lg bg-tertiary-fixed text-on-tertiary-fixed font-body-md text-body-md';
+      box.setAttribute('role', 'alert');
+      box.innerHTML = '<span class="material-symbols-outlined text-on-tertiary-fixed-variant">info</span><span class="form-notice-text"></span>';
+      step.insertBefore(box, step.lastElementChild);
+    }
+    box.querySelector('.form-notice-text').textContent = message;
+    box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (field) {
+      field.classList.add('ring-2', 'ring-on-tertiary-container');
+      const clear = () => field.classList.remove('ring-2', 'ring-on-tertiary-container');
+      field.addEventListener('input', clear, { once: true });
+      field.addEventListener('change', clear, { once: true });
+      if (field.focus) field.focus({ preventScroll: true });
+    }
+    clearTimeout(notify.timer);
+    notify.timer = setTimeout(() => box.remove(), 7000);
+  }
+  const clearNotices = () => document.querySelectorAll('.form-notice').forEach((n) => n.remove());
+
   function validateStep1() {
     const size = document.getElementById('selected-company-size').value;
     const sector = document.getElementById('sector').value;
     const city = document.getElementById('city').value.trim();
 
     if (!size) {
-      alert("Por favor selecciona el tamaño aproximado de tu empresa para continuar.");
+      notify("Selecciona el tamaño aproximado de tu empresa para continuar.");
       return;
     }
     if (!sector) {
-      alert("Por favor selecciona el sector económico de tu empresa.");
+      notify("Selecciona el sector económico de tu empresa.", document.getElementById('sector'));
       return;
     }
     if (!city) {
-      alert("Por favor indica la ciudad principal de operación.");
+      notify("Indica la ciudad principal donde opera tu empresa.", document.getElementById('city'));
       return;
     }
 
@@ -629,7 +656,7 @@
       checkmark.classList.add('hidden');
     } else {
       if (selectedPains.size >= 3) {
-        alert("Puedes seleccionar un máximo de 3 dolores principales para mantener el diagnóstico enfocado.");
+        notify("Puedes elegir hasta 3 desafíos para mantener el diagnóstico enfocado. Quita uno para elegir otro.");
         return;
       }
       selectedPains.add(painKey);
@@ -648,7 +675,7 @@
 
   function validateStep2() {
     if (selectedPains.size === 0) {
-      alert("Por favor selecciona al menos 1 dolor o desafío principal en tu operación.");
+      notify("Elige al menos un desafío principal de tu operación.");
       return;
     }
     currentStep = 3;
@@ -673,7 +700,7 @@
 
   function validateStep3() {
     if (selectedTools.size === 0) {
-      alert("Por favor selecciona al menos una de las herramientas que utiliza tu equipo.");
+      notify("Elige al menos una herramienta que use tu equipo.");
       return;
     }
     currentStep = 4;
@@ -689,12 +716,13 @@
     const consent = document.getElementById('privacy-consent').checked;
 
     if (!name || !role || !company || !email || !phone) {
-      alert("Por favor completa todos los campos requeridos para enviar tu diagnóstico.");
+      const missing = ['contact-name', 'contact-role', 'company-name', 'contact-email', 'contact-whatsapp'].map((id) => document.getElementById(id)).find((f) => !f.value.trim());
+      notify("Completa todos los campos para enviar tu diagnóstico.", missing);
       return;
     }
 
     if (!consent) {
-      alert("Debes aceptar la política de privacidad para proceder.");
+      notify("Para continuar, acepta el tratamiento de datos personales.", document.getElementById('privacy-consent'));
       return;
     }
 
