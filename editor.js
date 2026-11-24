@@ -3,7 +3,7 @@
   if (!new URLSearchParams(location.search).has('editar')) return;
 
   // Original pages: the section library is built from their designs.
-  const BUILTIN = { index: 'Inicio', servicios: 'Servicios', 'metodologia-cultivar': 'Metodología Cultivar', 'casos-de-exito': 'Casos de Éxito', 'diagnostico-gratis': 'Diagnóstico Gratis' };
+  const BUILTIN = { index: 'Inicio', servicios: 'Servicios', 'metodologia-cultivar': 'Metodología Cultivar', 'casos-de-exito': 'Casos de Éxito', 'diagnostico-gratis': 'Diagnóstico Gratis', nosotros: 'Nosotros', recursos: 'Recursos' };
   const slug = location.pathname.replace(/^\/|\/$/g, '') || 'index';
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) return;
 

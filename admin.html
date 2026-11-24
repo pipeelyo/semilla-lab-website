@@ -43,6 +43,17 @@
   .slug input{border:0;flex:1;padding-left:2px}
   section+section{margin-top:24px}
   [hidden]{display:none!important}
+  .row-head{display:flex;gap:16px;align-items:flex-start;justify-content:space-between}
+  .lead{border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;grid-template-columns:1fr auto;gap:8px 16px}
+  .lead+.lead{margin-top:12px}
+  .lead h3{margin:0;font-size:16px;color:var(--green)}
+  .lead .meta{color:var(--muted);font-size:13px}
+  .lead dl{grid-column:1/-1;display:grid;grid-template-columns:max-content 1fr;gap:4px 12px;margin:4px 0 0;font-size:14px}
+  .lead dt{color:var(--muted)}
+  .lead dd{margin:0}
+  .lead .acts{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;align-items:flex-start}
+  .chip{display:inline-block;background:var(--soft);color:var(--green);border-radius:999px;padding:1px 10px;margin:0 4px 4px 0;font-size:13px}
+  .empty{color:var(--muted);padding:12px 0}
   @media (max-width:640px){#nueva form{grid-template-columns:1fr}td.actions{justify-content:flex-start}}
 </style>
 </head>
@@ -66,6 +77,14 @@
   </section>
 
   <div id="panel" hidden>
+    <section class="card" id="solicitudes">
+      <div class="row-head">
+        <div><h1>Solicitudes de diagnóstico</h1><p class="muted">Personas que completaron el formulario de Diagnóstico Gratis. Los datos se guardan cifrados; elimina cada solicitud cuando ya la hayas atendido.</p></div>
+        <button class="light" id="csv" disabled>Descargar CSV</button>
+      </div>
+      <div id="leads">Cargando…</div>
+    </section>
+
     <section class="card">
       <h1>Páginas del sitio</h1>
       <p class="muted">Edita el contenido de cada página o crea una nueva. Los cambios guardados se ven en el sitio en aproximadamente 1 minuto.</p>
@@ -103,7 +122,7 @@
     if (loggedIn && next) return location.replace(next);
     $('#login').hidden = loggedIn;
     $('#panel').hidden = $('#salir').hidden = !loggedIn;
-    if (loggedIn) loadPages();
+    if (loggedIn) { loadPages(); loadLeads(); }
   }
 
   $('#login form').onsubmit = async (e) => {
@@ -138,6 +157,53 @@
     base.length = 1;
     pages.forEach((p) => base.add(new Option(`Copia de «${p.title}»`, p.slug)));
   }
+
+  let leads = [];
+  const fmtDate = (iso) => new Date(iso).toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short' });
+  const waLink = (phone) => `https://wa.me/${String(phone).replace(/\D/g, '')}`;
+  async function loadLeads() {
+    const r = await fetch('/api/leads', { cache: 'no-store' });
+    if (r.status === 401) return start();
+    if (!r.ok) { $('#leads').textContent = 'No se pudieron cargar las solicitudes.'; return; }
+    leads = await r.json();
+    $('#csv').disabled = !leads.length;
+    $('#leads').innerHTML = leads.length ? leads.map((l) => l.error ? `<div class="lead"><span class="meta">${esc(l.error)}</span></div>` : `
+      <article class="lead">
+        <div><h3>${esc(l.name)} · ${esc(l.company)}</h3><span class="meta">${esc(l.role)} · recibida ${esc(fmtDate(l.createdAt))}</span></div>
+        <div class="acts">
+          <a class="btn" href="${esc(waLink(l.phone))}" target="_blank" rel="noopener">WhatsApp</a>
+          <a class="btn light" href="mailto:${esc(l.email)}?subject=${encodeURIComponent('Tu diagnóstico con Semilla Lab')}">Correo</a>
+          <button class="danger" data-lead="${esc(l.id)}" data-name="${esc(l.name)}">Eliminar</button>
+        </div>
+        <dl>
+          <dt>Correo</dt><dd>${esc(l.email)}</dd>
+          <dt>WhatsApp</dt><dd>${esc(l.phone)}</dd>
+          <dt>Tamaño</dt><dd>${esc(l.size)}</dd>
+          <dt>Sector</dt><dd>${esc(l.sector)}</dd>
+          <dt>Ciudad</dt><dd>${esc(l.city)}</dd>
+          <dt>Desafíos</dt><dd>${(l.pains || []).map((x) => `<span class="chip">${esc(x)}</span>`).join('') || '—'}</dd>
+          <dt>Herramientas</dt><dd>${(l.tools || []).map((x) => `<span class="chip">${esc(x)}</span>`).join('') || '—'}</dd>
+        </dl>
+      </article>`).join('') : '<p class="empty">Todavía no hay solicitudes. Cuando alguien complete el diagnóstico aparecerá aquí.</p>';
+  }
+  $('#leads').onclick = async (e) => {
+    const b = e.target.closest('[data-lead]');
+    if (!b || !confirm(`¿Eliminar la solicitud de ${b.dataset.name}? Esta acción no se puede deshacer.`)) return;
+    b.disabled = true;
+    const r = await fetch(`/api/leads?id=${encodeURIComponent(b.dataset.lead)}`, { method: 'DELETE' });
+    if (!r.ok) { alert('No se pudo eliminar. Intenta de nuevo.'); b.disabled = false; return; }
+    loadLeads();
+  };
+  $('#csv').onclick = () => {
+    const cols = [['Fecha', (l) => fmtDate(l.createdAt)], ['Nombre', 'name'], ['Cargo', 'role'], ['Empresa', 'company'], ['Correo', 'email'], ['WhatsApp', 'phone'], ['Tamaño', 'size'], ['Sector', 'sector'], ['Ciudad', 'city'], ['Desafíos', (l) => (l.pains || []).join('; ')], ['Herramientas', (l) => (l.tools || []).join('; ')]];
+    // Prefix cells that start with = + - @ so spreadsheets don't run them as formulas.
+    const cell = (v) => { let t = String(v ?? ''); if (/^[=+\-@]/.test(t)) t = `'${t}`; return `"${t.replace(/"/g, '""')}"`; };
+    const rows = [cols.map(([h]) => h), ...leads.filter((l) => !l.error).map((l) => cols.map(([, f]) => (typeof f === 'function' ? f(l) : l[f])))];
+    const blob = new Blob(['\ufeff' + rows.map((r) => r.map(cell).join(',')).join('\r\n')], { type: 'text/csv;charset=utf-8' });
+    const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: `solicitudes-semilla-lab-${new Date().toISOString().slice(0, 10)}.csv` });
+    a.click();
+    URL.revokeObjectURL(a.href);
+  };
 
   $('#lista').onclick = async (e) => {
     const b = e.target.closest('[data-del]');

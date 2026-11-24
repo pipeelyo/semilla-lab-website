@@ -1,4 +1,4 @@
-import { createHash, createHmac, timingSafeEqual } from 'node:crypto';
+import { createCipheriv, createDecipheriv, createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 
@@ -8,6 +8,8 @@ export const PAGE_NAMES = {
   'metodologia-cultivar': 'Metodología Cultivar',
   'casos-de-exito': 'Casos de Éxito',
   'diagnostico-gratis': 'Diagnóstico Gratis',
+  nosotros: 'Nosotros',
+  recursos: 'Recursos',
 };
 export const SLUGS = Object.keys(PAGE_NAMES);
 export const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -76,3 +78,24 @@ export async function blankBody(title) {
 export const titleOf = (body) =>
   (body.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i)?.[1] || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim()
     .replace(/&#(\d+);/g, (_, d) => String.fromCharCode(d)).replace(/&nbsp;/g, ' ').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&amp;/g, '&');
+
+// --- Diagnostic requests (personal data) -----------------------------------
+// Stored encrypted (AES-256-GCM) because the Blob store is public-access: a leaked
+// URL reveals nothing without LEADS_KEY, which only exists in Vercel.
+const leadKey = () => {
+  const key = Buffer.from(process.env.LEADS_KEY || '', 'base64');
+  if (key.length !== 32) throw new Error('LEADS_KEY no configurada');
+  return key;
+};
+export function seal(obj) {
+  const iv = randomBytes(12);
+  const c = createCipheriv('aes-256-gcm', leadKey(), iv);
+  const data = Buffer.concat([c.update(JSON.stringify(obj), 'utf8'), c.final()]);
+  return Buffer.concat([iv, c.getAuthTag(), data]).toString('base64');
+}
+export function unseal(text) {
+  const buf = Buffer.from(text, 'base64');
+  const d = createDecipheriv('aes-256-gcm', leadKey(), buf.subarray(0, 12));
+  d.setAuthTag(buf.subarray(12, 28));
+  return JSON.parse(Buffer.concat([d.update(buf.subarray(28)), d.final()]).toString('utf8'));
+}
