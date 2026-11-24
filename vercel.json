@@ -1,1 +1,8 @@
-{ "cleanUrls": true }
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/", "destination": "/api/render?slug=index" },
+    { "source": "/:slug(servicios|metodologia-cultivar|casos-de-exito|diagnostico-gratis)", "destination": "/api/render?slug=:slug" }
+  ],
+  "functions": { "api/render.js": { "includeFiles": "pages/**" } }
+}
