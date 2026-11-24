@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+
+<html lang="es"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><title>Semilla Lab | Arquitectura de Software y Consultoría de Procesos</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"outline":"#717970","secondary-fixed-dim":"#9dd769","inverse-surface":"#28332d","surface-container-low":"#eaf7ed","secondary-fixed":"#b8f482","secondary-container":"#b5f17f","outline-variant":"#c1c9be","surface":"#f0fdf3","on-tertiary-fixed-variant":"#673d00","on-surface-variant":"#414941","surface-tint":"#376944","error-container":"#ffdad6","inverse-on-surface":"#e7f4ea","on-surface":"#131e18","on-primary":"#ffffff","on-primary-container":"#89bd92","primary-fixed":"#b9f0c1","on-tertiary-fixed":"#2b1700","on-secondary-fixed-variant":"#295000","primary-container":"#1b4d2b","surface-container-high":"#dfebe2","surface-variant":"#d9e6dc","background":"#f0fdf3","surface-dim":"#d0ddd4","on-secondary-fixed":"#0d2000","primary-fixed-dim":"#9ed3a6","on-background":"#131e18","on-tertiary-container":"#f59d22","on-secondary-container":"#3d6f07","primary":"#003617","tertiary-fixed":"#ffddbb","on-error":"#ffffff","on-tertiary":"#ffffff","surface-container-highest":"#d9e6dc","tertiary":"#442700","inverse-primary":"#9ed3a6","surface-bright":"#f0fdf3","surface-container":"#e4f1e7","error":"#ba1a1a","tertiary-container":"#633a00","on-secondary":"#ffffff","on-error-container":"#93000a","surface-container-lowest":"#ffffff","tertiary-fixed-dim":"#ffb867","secondary":"#396a01","on-primary-fixed-variant":"#1e502e","on-primary-fixed":"#00210c"},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"space-sm":"0.5rem","margin-mobile":"1.25rem","gutter-mobile":"1rem","margin":"3rem","space-xl":"2.5rem","space-md":"1rem","space-lg":"1.5rem","gutter":"1.5rem","space-xs":"0.25rem"},fontFamily:{"body-lg":["Inter"],"headline-xl-mobile":["Plus Jakarta Sans"],"display-hero-mobile":["Plus Jakarta Sans"],"label-md":["Plus Jakarta Sans"],"display-hero":["Plus Jakarta Sans"],"label-sm":["Plus Jakarta Sans"],"headline-xl":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"body-md":["Inter"],"body-xl":["Inter"],"label-lg":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"]},fontSize:{"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"headline-xl-mobile":["30px",{"lineHeight":"38px","fontWeight":"700"}],"display-hero-mobile":["36px",{"lineHeight":"44px","fontWeight":"700"}],"label-md":["12px",{"lineHeight":"16px","fontWeight":"600"}],"display-hero":["56px",{"lineHeight":"64px","fontWeight":"700"}],"label-sm":["11px",{"lineHeight":"14px","fontWeight":"500"}],"headline-xl":["40px",{"lineHeight":"48px","fontWeight":"700"}],"headline-lg":["32px",{"lineHeight":"40px","fontWeight":"600"}],"headline-sm":["20px",{"lineHeight":"28px","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"body-xl":["18px",{"lineHeight":"28px","fontWeight":"400"}],"label-lg":["14px",{"lineHeight":"20px","fontWeight":"600"}],"headline-md":["24px",{"lineHeight":"32px","fontWeight":"600"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><header class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(27,77,43,0.06)]"><div class="h-20 max-w-7xl mx-auto px-margin-mobile lg:px-margin flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-md shrink-0"><a class="flex items-center gap-space-sm" data-path="inicio" href="/"><img alt="Semilla Lab Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrBZQYgRKK8a4nG5M7gbJN7boVpORc5GzOWTz9JOAS5uLrQD6OwHiv74XcJS1lPrVp4C4l8XFD9arSBs2E3TYB8myK9kgjdWzHH8NxtMDsdgvBARRvWkd-rY5FKUMaVEW_d6EWmMG0yTEQliCx6GLxgm9xB2UHoENzH7eIIQ30XUuV5paq6UARJbY9E_sYqgw8P0VE3DRpW7TmGVs5JUUSlLgtfimCXNLnSCgrEHpNI"/><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-primary tracking-tight leading-none">Semilla Lab</span><span class="font-label-sm text-label-sm text-on-surface-variant tracking-normal">Confianza que crece</span></div></a></div><nav class="hidden xl:flex items-center gap-space-xs" data-active-classes="text-primary font-bold bg-surface-container rounded-lg"><a class="px-space-sm py-space-xs font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" data-path="inicio" href="/">Inicio</a><a aria-current="page" class="px-space-sm py-space-xs transition-all text-primary font-bold bg-surface-container rounded-lg" data-path="servicios" href="/servicios">Servicios</a><a class="px-space-sm py-space-xs font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" data-path="metodologia-cultivar" href="/metodologia-cultivar">Metodología Cultivar</a><a class="px-space-sm py-space-xs font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" data-path="casos-de-exito" href="/casos-de-exito">Casos de Éxito</a><a class="px-space-sm py-space-xs font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" data-path="diagnostico-gratis" href="/diagnostico-gratis">Diagnóstico Gratis</a><a class="px-space-sm py-space-xs font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" data-path="nosotros" href="#">Nosotros</a><a class="px-space-sm py-space-xs font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" data-path="recursos" href="#">Recursos</a><a class="px-space-sm py-space-xs font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" data-path="contacto" href="/diagnostico-gratis">Contacto</a></nav><div class="flex items-center gap-space-sm shrink-0"><a class="flex items-center justify-center w-10 h-10 rounded-full bg-surface-container-low text-primary hover:bg-surface-container hover:text-on-surface transition-all" href="https://wa.me/573001234567" rel="noopener noreferrer" target="_blank" title="Escríbenos por WhatsApp"><span class="material-symbols-outlined">chat</span></a><a class="hidden sm:inline-flex items-center px-space-md py-space-sm rounded-full bg-on-tertiary-container text-primary-container font-label-lg text-label-lg shadow-[0_4px_12px_rgba(245,157,34,0.25)] hover:shadow-[0_6px_16px_rgba(245,157,34,0.35)] transition-all" data-path="diagnostico-gratis" href="/diagnostico-gratis">Agenda un diagnóstico</a><div class="pl-space-xs flex items-center gap-space-xs"><img alt="Profile" class="w-8 h-8 rounded-full object-cover shadow-[0_1px_4px_rgba(31,42,36,0.12)]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxBH-vY031FgqCL1I0523w8uLoD_o8CpUCXZdoXNWe0e6nI7TYFTf54aSupI19xRm-ueAC21gF20U2jRBcA_0ju-gL-A8F_onWCiRJ1HRvfJvjyUkCpMTMSoj_myOfoOCOJzgf1hgtQ-oCcyzR3b9OhOXXCb9Q21GUHiQ1qZTQNsqqTatIWMc0lwv-p2gikMB7qKx9CoW9XsgLcPq5OdBZXL6n-JDdwkjyoV4qiQ"/></div></div></div></header><main class="w-full pt-20 bg-surface min-h-screen"><div class="flex flex-col w-full">
+<!-- Top Hero & Navigation Context -->
+<section class="relative w-full bg-surface-container-low/70 py-space-xl overflow-hidden">
+<div class="max-w-7xl mx-auto px-margin-mobile lg:px-margin relative z-10">
+<!-- Badge & Overline -->
+<div class="inline-flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-secondary-container/50 text-on-secondary-container font-label-md text-label-md mb-space-md shadow-sm">
+<span class="material-symbols-outlined text-secondary text-base">eco</span>
+<span>Portafolio de Especialidad Técnica y Procesos</span>
+</div>
+<!-- Main Headline & Intro -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-end">
+<div class="lg:col-span-8 flex flex-col gap-space-sm">
+<span class="font-label-lg text-label-lg text-secondary tracking-widest uppercase">Nuestros Servicios</span>
+<h1 class="font-headline-xl text-headline-xl text-primary tracking-tight leading-tight">
+            Soluciones pensadas para dar orden hoy y sostener el crecimiento de mañana.
+          </h1>
+</div>
+<div class="lg:col-span-4 flex flex-col gap-space-md">
+<p class="font-body-xl text-body-xl text-on-surface-variant">
+            No vendemos software de caja ni horas de programación al azar. Diagnosticamos tu estructura, diseñamos la solución adecuada y construimos la tecnología que tu equipo realmente adoptará.
+          </p>
+<div class="flex items-center gap-space-sm pt-space-xs">
+<a class="inline-flex items-center gap-space-xs font-label-lg text-label-lg text-primary hover:text-secondary transition-colors" href="#bloques-servicios">
+              Explora las 4 áreas clave
+              <span class="material-symbols-outlined">south</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Metric Highlights Strip -->
+<div class="mt-space-xl grid grid-cols-2 md:grid-cols-4 gap-gutter pt-space-lg">
+<div class="flex flex-col gap-space-xs p-space-md rounded-xl bg-surface-container-lowest/80 backdrop-blur-sm shadow-sm">
+<span class="font-headline-lg text-headline-lg text-primary">100%</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Diseñado con y para los usuarios reales</span>
+</div>
+<div class="flex flex-col gap-space-xs p-space-md rounded-xl bg-surface-container-lowest/80 backdrop-blur-sm shadow-sm">
+<span class="font-headline-lg text-headline-lg text-secondary">0</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Ventas de código superfluo o no amortizable</span>
+</div>
+<div class="flex flex-col gap-space-xs p-space-md rounded-xl bg-surface-container-lowest/80 backdrop-blur-sm shadow-sm">
+<span class="font-headline-lg text-headline-lg text-on-tertiary-container">C4</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Arquitectura documentada y portable</span>
+</div>
+<div class="flex flex-col gap-space-xs p-space-md rounded-xl bg-surface-container-lowest/80 backdrop-blur-sm shadow-sm">
+<span class="font-headline-lg text-headline-lg text-primary">RACI</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Gobernanza operativa y roles cristalinos</span>
+</div>
+</div>
+</div>
+</section>
+<!-- SERVICIOS: 4 BLOQUES DETALLADOS -->
+<section class="w-full py-space-xl bg-surface" id="bloques-servicios">
+<div class="max-w-7xl mx-auto px-margin-mobile lg:px-margin flex flex-col gap-space-xl">
+<!-- Section Indicator -->
+<div class="flex flex-col items-center text-center max-w-2xl mx-auto gap-space-xs">
+<span class="font-label-md text-label-md text-secondary uppercase tracking-wider">Metodología Modular</span>
+<h2 class="font-headline-lg text-headline-lg text-primary">Las cuatro raíces de una organización sana</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+          Abordamos tu desafío desde el orden de las personas y la información, antes de escribir una sola línea de código crítico.
+        </p>
+</div>
+<!-- BLOQUE 1: Consultoría y Orden Empresarial -->
+<article class="bg-surface-container-lowest rounded-xl p-space-lg lg:p-space-xl shadow-sm hover:shadow-md transition-shadow">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+<div class="lg:col-span-5 flex flex-col gap-space-md">
+<div class="flex items-center gap-space-sm">
+<span class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center text-primary font-headline-sm text-headline-sm">
+                01
+              </span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Fundamento Operativo</span>
+<h3 class="font-headline-md text-headline-md text-primary">Consultoría y Orden Empresarial</h3>
+</div>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+              Mapeo de procesos end-to-end, definición de roles y responsabilidades (RACI), manuales de operación vivos, identificación de cuellos de botella y diseño de indicadores medibles (KPIs).
+            </p>
+<!-- Card: Para quién es -->
+<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs text-primary font-label-lg text-label-lg">
+<span class="material-symbols-outlined text-secondary">target</span>
+<span>¿Para quién es?</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface">
+                Empresas que han crecido rápido y sienten que la operación diaria se les salió de las manos; negocios donde todo depende de la memoria de fundadores o mandos medios clave.
+              </p>
+</div>
+<!-- Entregables -->
+<div class="flex flex-col gap-space-xs pt-space-xs">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Entregables tangibles:</span>
+<ul class="flex flex-col gap-space-xs font-body-md text-body-md text-on-surface">
+<li class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-base">check_circle</span>
+<span>Mapa visual de procesos end-to-end (BPMN interactivo)</span>
+</li>
+<li class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-base">check_circle</span>
+<span>Matriz de responsabilidades y decisiones RACI</span>
+</li>
+<li class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-base">check_circle</span>
+<span>Manual de procedimientos vivos y versionados en Notion / Confluence</span>
+</li>
+<li class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-base">check_circle</span>
+<span>Plan de mitigación inmediata de cuellos de botella</span>
+</li>
+</ul>
+</div>
+</div>
+<!-- Visual Illustration & Data Graph -->
+<div class="lg:col-span-7 flex flex-col gap-space-md">
+<div class="p-space-lg rounded-xl bg-surface-container flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="font-label-lg text-label-lg text-primary">Simulación: Eficiencia de Proceso Operativo</span>
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-on-secondary-container bg-secondary-container/40 px-2 py-0.5 rounded-full">
+                  Reducción de reprocesos -42%
+                </span>
+</div>
+<!-- Process Flow Infographic SVG -->
+<div class="w-full bg-surface-container-lowest p-space-md rounded-lg shadow-sm">
+<svg class="w-full h-auto text-primary" fill="none" viewbox="0 0 680 160" xmlns="http://www.w3.org/2000/svg">
+<!-- Node 1 -->
+<rect fill="#EAF7ED" height="70" rx="8" stroke="currentColor" stroke-width="1.5" width="130" x="20" y="40"></rect>
+<text class="font-label-md" fill="#131E18" font-size="12" font-weight="600" text-anchor="middle" x="85" y="70">Recepción / Venta</text>
+<text fill="#414941" font-size="10" text-anchor="middle" x="85" y="90">Entrada desordenada</text>
+<!-- Connection 1 -->
+<path d="M150 75 L200 75" stroke="#396A01" stroke-dasharray="4 4" stroke-width="2"></path>
+<polygon fill="#396A01" points="202,75 194,70 194,80"></polygon>
+<!-- Node 2 (Diagnosis Gate) -->
+<circle cx="230" cy="75" fill="#003617" r="26"></circle>
+<text fill="#FFFFFF" font-size="10" font-weight="600" text-anchor="middle" x="230" y="79">FILTRO</text>
+<!-- Connection 2 -->
+<path d="M256 75 L306 75" stroke="#396A01" stroke-width="2"></path>
+<polygon fill="#396A01" points="308,75 300,70 300,80"></polygon>
+<!-- Node 3 -->
+<rect fill="#EAF7ED" height="70" rx="8" stroke="currentColor" stroke-width="1.5" width="150" x="310" y="40"></rect>
+<text fill="#131E18" font-size="12" font-weight="600" text-anchor="middle" x="385" y="70">Operación &amp; RACI</text>
+<text fill="#414941" font-size="10" text-anchor="middle" x="385" y="90">Asignación sin fricción</text>
+<!-- Connection 3 -->
+<path d="M460 75 L510 75" stroke="#396A01" stroke-width="2"></path>
+<polygon fill="#396A01" points="512,75 504,70 504,80"></polygon>
+<!-- Node 4 (Outcome) -->
+<rect fill="#F59D22" fill-opacity="0.15" height="70" rx="8" stroke="#F59D22" stroke-width="1.5" width="145" x="515" y="40"></rect>
+<text fill="#442700" font-size="12" font-weight="600" text-anchor="middle" x="587" y="70">KPIs Medibles</text>
+<text fill="#442700" font-size="10" text-anchor="middle" x="587" y="90">Cierre predecible</text>
+</svg>
+</div>
+<!-- Contextual Image Placeholder -->
+<div class="relative w-full h-48 rounded-lg overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A warm, collaborative business workshop in a modern sunlit meeting room in Bogotá Colombia. Two consultants and an operations manager gather around an interactive glass board reviewing operational process maps, relaxed yet confident posture, warm wooden surfaces and subtle indoor greenery." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhx4iJbCyoXxEhS05YbpACnasGAqT-GAmWtzyZmwHsQuG9HW5yM_l7nMCKphUVC5QatwnPOdfmUGAOshcdZ32YHJoL8RYw1mWo23jLLmBCFeC7aT07Lzb9hBB8DwL2E7w5PsSu57iCMwiDOaPLcgXIzTM43o2cVhVGRGj-LB38Vy3_ZKIpi47-21lqIqx-LJ8Jdoi0UxIGXysrdzFFJTo3t5JApqBUrCd6hGUj_A"/>
+<div class="absolute inset-0 bg-primary/20 mix-blend-multiply"></div>
+<div class="absolute bottom-3 left-4 text-on-primary font-label-sm text-label-sm">
+                  Sesión de mapeo participativo con líderes de área
+                </div>
+</div>
+</div>
+</div>
+</div>
+</article>
+<!-- BLOQUE 2: Arquitectura de Software e Integraciones -->
+<article class="bg-surface-container-lowest rounded-xl p-space-lg lg:p-space-xl shadow-sm hover:shadow-md transition-shadow">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+<div class="lg:col-span-5 flex flex-col gap-space-md order-1 lg:order-1">
+<div class="flex items-center gap-space-sm">
+<span class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center text-primary font-headline-sm text-headline-sm">
+                02
+              </span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Estructura &amp; Robustez</span>
+<h3 class="font-headline-md text-headline-md text-primary">Arquitectura de Software e Integraciones</h3>
+</div>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+              Diseño de sistemas escalables, selección de stack tecnológico adecuado sin modas pasajeras, auditoría profunda de código o sistemas legados y conexión de software disperso mediante APIs seguras.
+            </p>
+<!-- Card: Para quién es -->
+<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs text-primary font-label-lg text-label-lg">
+<span class="material-symbols-outlined text-secondary">hub</span>
+<span>¿Para quién es?</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface">
+                Empresas que ya cuentan con múltiples plataformas (CRM, ERP, pasarelas de pago, bases de datos) pero no conversan entre sí, o cuyos sistemas sufren caídas intermitentes y tiempos de carga lentos.
+              </p>
+</div>
+<!-- Entregables -->
+<div class="flex flex-col gap-space-xs pt-space-xs">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Entregables tangibles:</span>
+<ul class="flex flex-col gap-space-xs font-body-md text-body-md text-on-surface">
+<li class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-base">check_circle</span>
+<span>Diagramas de arquitectura C4 (Contexto, Contenedores, Componentes)</span>
+</li>
+<li class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-base">check_circle</span>
+<span>Plan integral de contingencia, respaldos automáticos y seguridad</span>
+</li>
+<li class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-base">check_circle</span>
+<span>Contratos de API OpenAPI/Swagger y microservicios modulares</span>
+</li>
+<li class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-base">check_circle</span>
+<span>Hoja de ruta tecnológica a 12 y 24 meses priorizada por ROI</span>
+</li>
+</ul>
+</div>
+</div>
+<!-- Visual Illustration & Technical C4 Diagram -->
+<div class="lg:col-span-7 flex flex-col gap-space-md order-2 lg:order-2">
+<div class="p-space-lg rounded-xl bg-surface-container-high/60 flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="font-label-lg text-label-lg text-primary">Esquema Modular de Integración Segura</span>
+<span class="font-label-sm text-label-sm text-primary-container bg-primary-fixed px-2 py-0.5 rounded-full">
+                  Zero Downtime Target
+                </span>
+</div>
+<!-- Technical SVG Architecture Widget -->
+<div class="w-full bg-surface-container-lowest p-space-md rounded-lg shadow-sm">
+<svg class="w-full h-auto" fill="none" viewbox="0 0 680 180" xmlns="http://www.w3.org/2000/svg">
+<!-- Legacy / External Source -->
+<rect fill="#DFEBE2" height="50" rx="6" width="130" x="20" y="20"></rect>
+<text fill="#003617" font-size="11" font-weight="600" text-anchor="middle" x="85" y="45">ERP / Facturación</text>
+<text fill="#414941" font-size="9" text-anchor="middle" x="85" y="60">Legacy / On-Premise</text>
+<rect fill="#DFEBE2" height="50" rx="6" width="130" x="20" y="100"></rect>
+<text fill="#003617" font-size="11" font-weight="600" text-anchor="middle" x="85" y="125">CRM Comercial</text>
+<text fill="#414941" font-size="9" text-anchor="middle" x="85" y="140">HubSpot / Salesforce</text>
+<!-- Connectors to API Gateway -->
+<path d="M150 45 L240 75" stroke="#396A01" stroke-width="2"></path>
+<path d="M150 125 L240 95" stroke="#396A01" stroke-width="2"></path>
+<!-- Central Gateway / Semilla Core -->
+<rect fill="#003617" height="85" rx="10" width="180" x="240" y="45"></rect>
+<text fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle" x="330" y="78">API GATEWAY SEGURO</text>
+<text fill="#9ED3A6" font-size="10" text-anchor="middle" x="330" y="98">Autenticación JWT + Rate Limiting</text>
+<text fill="#E4F1E7" font-size="9" text-anchor="middle" x="330" y="114">Event Bus / Kafka</text>
+<!-- Outbound to Microservices -->
+<path d="M420 70 L500 45" stroke="#396A01" stroke-width="2"></path>
+<path d="M420 100 L500 125" stroke="#396A01" stroke-width="2"></path>
+<!-- Target Apps -->
+<rect fill="#B5F17F" fill-opacity="0.3" height="50" rx="6" stroke="#396A01" stroke-width="1.5" width="160" x="500" y="20"></rect>
+<text fill="#0D2000" font-size="11" font-weight="600" text-anchor="middle" x="580" y="45">Portal Web Clientes</text>
+<text fill="#3D6F07" font-size="9" text-anchor="middle" x="580" y="60">React + Microfrontends</text>
+<rect fill="#B5F17F" fill-opacity="0.3" height="50" rx="6" stroke="#396A01" stroke-width="1.5" width="160" x="500" y="100"></rect>
+<text fill="#0D2000" font-size="11" font-weight="600" text-anchor="middle" x="580" y="125">BBDD Centralizada</text>
+<text fill="#3D6F07" font-size="9" text-anchor="middle" x="580" y="140">PostgreSQL Cloud Master</text>
+</svg>
+</div>
+<!-- Contextual Image Placeholder -->
+<div class="relative w-full h-48 rounded-lg overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="High quality overhead view of software architects in Colombia sketching an intricate cloud infrastructure schematic on a large wooden conference table, laptop displaying clean code IDE, warm natural lighting from large foliage-surrounded windows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCldjP3SSO2wYWx-ps1qEL1oV5VfyrRLDxpXWIq-O-8nqeKkRtDBIsta2ScddjMWpheuF-Sm82mH8GLO2HamaU4DVQ_2siXnOlTq8zQib5_2tmYP85Y-1gUOR4-XBInro-NI1gBLCseB8Vs3fNKBiP7P7V3kbOzp_-CmN83snUtbo415kv7CS9KuJqG46hC83Sm0fyT7qwG5YXzI8HQBqU24ESUI0XdxCUtBiNkKg"/>
+<div class="absolute inset-0 bg-primary/20 mix-blend-multiply"></div>
+<div class="absolute bottom-3 left-4 text-on-primary font-label-sm text-label-sm">
+                  Auditoría y revisión de contratos de integración
+                </div>
+</div>
+</div>
+</div>
+</div>
+</article>
+<!-- BLOQUE 3: Desarrollo a la Medida (Web, Móvil y Paneles) -->
+<article class="bg-surface-container-lowest rounded-xl p-space-lg lg:p-space-xl shadow-sm hover:shadow-md transition-shadow">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+<div class="lg:col-span-5 flex flex-col gap-space-md">
+<div class="flex items-center gap-space-sm">
+<span class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center text-primary font-headline-sm text-headline-sm">
+                03
+              </span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Creación de Producto</span>
+<h3 class="font-headline-md text-headline-md text-primary">Desarrollo a la Medida (Web, Móvil y Paneles)</h3>
+</div>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+              Aplicaciones web progresivas, paneles de control administrativo (backoffice de alta eficiencia), portales para clientes o proveedores y apps móviles diseñadas específicamente para operación en campo offline/online.
+            </p>
+<!-- Card: Para quién es -->
+<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs text-primary font-label-lg text-label-lg">
+<span class="material-symbols-outlined text-secondary">devices</span>
+<span>¿Para quién es?</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface">
+                Compañías que necesitan una ventaja competitiva exclusiva que ningún SaaS estándar o plantilla puede resolver; organizaciones con lógica de negocio muy particular.
+              </p>
+</div>
+<!-- Entregables -->
+<div class="flex flex-col gap-space-xs pt-space-xs">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Entregables tangibles:</span>
+<ul class="flex flex-col gap-space-xs font-body-md text-body-md text-on-surface">
+<li class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-base">check_circle</span>
+<span>Código limpio, tipado, modular y documentado con tests automatizados</span>
+</li>
+<li class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-base">check_circle</span>
+<span>Diseño UX/UI testeado con usuarios operativos reales en su contexto</span>
+</li>
+<li class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-base">check_circle</span>
+<span>Despliegue automático en nube (AWS / GCP / Azure) con pipeline CI/CD</span>
+</li>
+<li class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-base">check_circle</span>
+<span>Propiedad intelectual 100% transferida al cliente sin ataduras</span>
+</li>
+</ul>
+</div>
+</div>
+<!-- Visual Showcase Bento Mockup -->
+<div class="lg:col-span-7 flex flex-col gap-space-md">
+<div class="p-space-lg rounded-xl bg-surface-container flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="font-label-lg text-label-lg text-primary">Sistemas a la Medida en Producción</span>
+<span class="font-label-sm text-label-sm text-secondary bg-surface-container-lowest px-2 py-0.5 rounded-full shadow-sm">
+                  Web &amp; Mobile Native
+                </span>
+</div>
+<!-- Interactive Mockup Bento -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-sm">
+<!-- Backoffice Panel Preview -->
+<div class="p-space-md rounded-lg bg-surface-container-lowest shadow-sm flex flex-col gap-space-xs">
+<div class="flex items-center justify-between pb-space-xs">
+<span class="font-label-md text-label-md text-primary">Panel Backoffice Operativo</span>
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+</div>
+<div class="space-y-1.5">
+<div class="h-4 w-3/4 bg-surface-container-high rounded"></div>
+<div class="h-3 w-1/2 bg-surface-variant rounded"></div>
+<div class="h-10 w-full bg-surface-container-low rounded flex items-center justify-around px-2 mt-2">
+<span class="font-label-sm text-label-sm text-primary">Inventario</span>
+<span class="font-label-sm text-label-sm text-secondary">Aprobaciones</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Facturas</span>
+</div>
+</div>
+</div>
+<!-- Field App Preview -->
+<div class="p-space-md rounded-lg bg-surface-container-lowest shadow-sm flex flex-col gap-space-xs">
+<div class="flex items-center justify-between pb-space-xs">
+<span class="font-label-md text-label-md text-primary">App Móvil de Campo</span>
+<span class="font-label-sm text-label-sm text-on-tertiary-container bg-tertiary-fixed/30 px-1.5 rounded">Offline-First</span>
+</div>
+<div class="space-y-1.5">
+<div class="h-4 w-4/5 bg-secondary-fixed rounded"></div>
+<div class="h-3 w-2/3 bg-surface-variant rounded"></div>
+<div class="h-10 w-full bg-primary text-on-primary rounded flex items-center justify-center font-label-sm text-label-sm gap-1">
+<span class="material-symbols-outlined text-sm">cloud_sync</span> Sincronizado
+                    </div>
+</div>
+</div>
+</div>
+<!-- Real Project Visual Context -->
+<div class="relative w-full h-48 rounded-lg overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Close up photograph of a software engineer typing clean code on a mechanical keyboard with two monitors showing customized UI wireframes and backend data schemas, warm ambient office setting with plants and coffee in Colombia." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYldmmGv3U96dTBRH-OnQsiSpL5DtccuLXqIqoethe9gczXZb12k1L0Tpm6oRwhPt6FdYPwhh8-o6sT1syUJQdoMZM7vbgsc6i1K6CJQwij8mZnyA6FhanylKYg8JOKAlW9ngkfuHkCs7R5Li3i31xF-5lGQ7JZ9bv926uS-sZRtmAL1sGbl-b8GbWbtHqJpVJDj0FwRnM59FC-eNIlpNXDNGi4poWuHlwaP-HqA"/>
+<div class="absolute inset-0 bg-primary/20 mix-blend-multiply"></div>
+<div class="absolute bottom-3 left-4 text-on-primary font-label-sm text-label-sm">
+                  Desarrollo centrado en la usabilidad del colaborador
+                </div>
+</div>
+</div>
+</div>
+</div>
+</article>
+<!-- BLOQUE 4: Centralización de Información y Automatización -->
+<article class="bg-surface-container-lowest rounded-xl p-space-lg lg:p-space-xl shadow-sm hover:shadow-md transition-shadow">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+<div class="lg:col-span-5 flex flex-col gap-space-md order-1 lg:order-1">
+<div class="flex items-center gap-space-sm">
+<span class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center text-primary font-headline-sm text-headline-sm">
+                04
+              </span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Flujo de Datos &amp; Claridad</span>
+<h3 class="font-headline-md text-headline-md text-primary">Centralización de Información y Automatización</h3>
+</div>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+              Unificación de fuentes de datos dispersas (adiós a tener información duplicada en Excel, ERP y correos al mismo tiempo), bodegas de datos simples, flujos automatizados de tareas repetitivas (n8n, Zapier o scripts custom) y tableros ejecutivos en tiempo real.
+            </p>
+<!-- Card: Para quién es -->
+<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs text-primary font-label-lg text-label-lg">
+<span class="material-symbols-outlined text-secondary">insights</span>
+<span>¿Para quién es?</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface">
+                Gerentes generales, directores de finanzas y líderes operativos que pierden días solicitando reportes manuales y necesitan tomar decisiones informadas en minutos, no en semanas.
+              </p>
+</div>
+<!-- Entregables -->
+<div class="flex flex-col gap-space-xs pt-space-xs">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Entregables tangibles:</span>
+<ul class="flex flex-col gap-space-xs font-body-md text-body-md text-on-surface">
+<li class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-base">check_circle</span>
+<span>Pipelines de datos automáticos y limpios (ETL sin inconsistencias)</span>
+</li>
+<li class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-base">check_circle</span>
+<span>Dashboards ejecutivos interactivos (PowerBI, Metabase o Custom Web)</span>
+</li>
+<li class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-base">check_circle</span>
+<span>Workflows de alertas automáticas proactivas en Slack, WhatsApp o email</span>
+</li>
+<li class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-base">check_circle</span>
+<span>Diccionario unificado de métricas para toda la compañía</span>
+</li>
+</ul>
+</div>
+</div>
+<!-- Visual Illustration & Live Data Stream -->
+<div class="lg:col-span-7 flex flex-col gap-space-md order-2 lg:order-2">
+<div class="p-space-lg rounded-xl bg-surface-container flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="font-label-lg text-label-lg text-primary">Flujo de Automatización de Reportes</span>
+<span class="font-label-sm text-label-sm text-on-tertiary-container bg-tertiary-fixed/40 px-2 py-0.5 rounded-full">
+                  Ahorro estimado: 28 hrs/mes
+                </span>
+</div>
+<!-- SVG Data Pipeline Infographic -->
+<div class="w-full bg-surface-container-lowest p-space-md rounded-lg shadow-sm">
+<svg class="w-full h-auto" fill="none" viewbox="0 0 680 160" xmlns="http://www.w3.org/2000/svg">
+<!-- Sources -->
+<g transform="translate(10, 20)">
+<rect fill="#EAF7ED" height="30" rx="4" width="110" x="0" y="0"></rect>
+<text fill="#003617" font-size="10" text-anchor="middle" x="55" y="20">3 Archivos Excel</text>
+<rect fill="#EAF7ED" height="30" rx="4" width="110" x="0" y="45"></rect>
+<text fill="#003617" font-size="10" text-anchor="middle" x="55" y="65">Base CRM</text>
+<rect fill="#EAF7ED" height="30" rx="4" width="110" x="0" y="90"></rect>
+<text fill="#003617" font-size="10" text-anchor="middle" x="55" y="110">Extractos Bancarios</text>
+</g>
+<!-- Paths to ETL Automation -->
+<path d="M125 35 L210 65" stroke="#717970" stroke-dasharray="3 3" stroke-width="1.5"></path>
+<path d="M125 75 L210 75" stroke="#717970" stroke-width="1.5"></path>
+<path d="M125 105 L210 85" stroke="#717970" stroke-dasharray="3 3" stroke-width="1.5"></path>
+<!-- Automation Engine -->
+<rect fill="#1B4D2B" height="80" rx="8" width="160" x="210" y="35"></rect>
+<text fill="#B9F0C1" font-size="11" font-weight="700" text-anchor="middle" x="290" y="65">MOTOR DE INTEGRACIÓN</text>
+<text fill="#FFFFFF" font-size="10" text-anchor="middle" x="290" y="85">Limpieza y Validación</text>
+<text fill="#F59D22" font-size="9" text-anchor="middle" x="290" y="102">Ejecución cada 15 min</text>
+<!-- Arrow to Output -->
+<path d="M370 75 L450 75" stroke="#396A01" stroke-width="2"></path>
+<polygon fill="#396A01" points="452,75 444,70 444,80"></polygon>
+<!-- Output Targets -->
+<g transform="translate(455, 15)">
+<rect fill="#F59D22" fill-opacity="0.1" height="55" rx="6" stroke="#F59D22" stroke-width="1" width="200" x="0" y="0"></rect>
+<text fill="#442700" font-size="11" font-weight="700" text-anchor="middle" x="100" y="25">Tablero Ejecutivo en Vivo</text>
+<text fill="#673D00" font-size="9" text-anchor="middle" x="100" y="42">Margen, Cartera &amp; Entregas al día</text>
+<rect fill="#EAF7ED" height="55" rx="6" stroke="#396A01" stroke-width="1" width="200" x="0" y="65"></rect>
+<text fill="#003617" font-size="11" font-weight="700" text-anchor="middle" x="100" y="90">Alertas WhatsApp / Slack</text>
+<text fill="#414941" font-size="9" text-anchor="middle" x="100" y="107">Desviaciones presupuestales al instante</text>
+</g>
+</svg>
+</div>
+<!-- Contextual Visual Placeholder -->
+<div class="relative w-full h-48 rounded-lg overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A clean modern executive operations dashboard displayed on a dual-monitor setup in an open office with natural lighting, showing KPI charts, inventory status and automated metrics with real-time green indicators." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRtkmnef6jWvKn-2N_kNKKyUPpv5i696riY0G2oxqTLoikBO0T2Wi-Owp-ZqURffajx1D17kBt58UsaSOSQA8RrLNXzYDmfERgg0nt2JrQ43f586KwTKMNkOiZOGhmFuHrpluoJAKSJ39DdVzoqbFr1JtjeNLHvNiXRM2xbH48w0AhilWnJ6Xn8eq-tIKOqvIz1ND9YA9jZabvFswD-ukRN_MHbmsqfPwSNlsf-A"/>
+<div class="absolute inset-0 bg-primary/20 mix-blend-multiply"></div>
+<div class="absolute bottom-3 left-4 text-on-primary font-label-sm text-label-sm">
+                  Monitoreo centralizado para decisiones estratégicas rápidas
+                </div>
+</div>
+</div>
+</div>
+</div>
+</article>
+</div>
+</section>
+<!-- COMPARADOR ESTRATÉGICO: Consultora Estratégica vs. Fábrica de Software -->
+<section class="w-full py-space-xl bg-surface-container-low/50">
+<div class="max-w-7xl mx-auto px-margin-mobile lg:px-margin flex flex-col gap-space-lg">
+<div class="flex flex-col items-center text-center max-w-3xl mx-auto gap-space-xs">
+<span class="font-label-md text-label-md text-secondary uppercase tracking-wider">Criterio de Elección</span>
+<h2 class="font-headline-lg text-headline-lg text-primary">¿Cuándo contratar una consultora estratégica vs. una fábrica de software tradicional?</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+          Entender lo que tu empresa necesita te ahorra miles de dólares y meses de frustración con herramientas que nadie usa.
+        </p>
+</div>
+<!-- Tabla Comparativa Visual (Bespoke Bento) -->
+<div class="w-full overflow-x-auto">
+<div class="min-w-[720px] bg-surface-container-lowest rounded-xl shadow-sm p-space-md lg:p-space-lg">
+<div class="grid grid-cols-12 gap-space-md pb-space-sm border-b border-surface-container">
+<div class="col-span-4 font-label-lg text-label-lg text-on-surface-variant">Dimensión de Trabajo</div>
+<div class="col-span-4 font-label-lg text-label-lg text-secondary">Semilla Lab (Consultoría + Arquitectura)</div>
+<div class="col-span-4 font-label-lg text-label-lg text-outline">Fábrica de Software Convencional</div>
+</div>
+<!-- Row 1 -->
+<div class="grid grid-cols-12 gap-space-md py-space-md border-b border-surface-container items-start">
+<div class="col-span-4">
+<span class="font-headline-sm text-headline-sm text-primary block">Punto de partida</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Cómo se aborda la necesidad inicial.</span>
+</div>
+<div class="col-span-4 p-space-sm rounded-lg bg-surface-container-low/70">
+<div class="flex items-center gap-space-xs text-secondary font-label-md text-label-md pb-1">
+<span class="material-symbols-outlined text-sm">check_circle</span> Diagnóstico de negocio
+              </div>
+<p class="font-body-md text-body-md text-on-surface">
+                Entendemos por qué ocurre el problema, quiénes están involucrados y si el software es la solución real antes de presupuestar.
+              </p>
+</div>
+<div class="col-span-4 p-space-sm rounded-lg bg-surface-variant/30">
+<div class="flex items-center gap-space-xs text-outline font-label-md text-label-md pb-1">
+<span class="material-symbols-outlined text-sm">remove_circle_outline</span> Toma de pedidos
+              </div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                Recibe requerimientos sin cuestionar. Si el requerimiento está desalineado, construyen exactamente lo solicitado sin alertar.
+              </p>
+</div>
+</div>
+<!-- Row 2 -->
+<div class="grid grid-cols-12 gap-space-md py-space-md border-b border-surface-container items-start">
+<div class="col-span-4">
+<span class="font-headline-sm text-headline-sm text-primary block">Gestión del cambio</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Adopción real por parte del equipo.</span>
+</div>
+<div class="col-span-4 p-space-sm rounded-lg bg-surface-container-low/70">
+<div class="flex items-center gap-space-xs text-secondary font-label-md text-label-md pb-1">
+<span class="material-symbols-outlined text-sm">check_circle</span> Acompañamiento humano
+              </div>
+<p class="font-body-md text-body-md text-on-surface">
+                Co-diseñamos con los operarios y mandos medios. Aseguramos capacitación continua y transición de hábitos de trabajo.
+              </p>
+</div>
+<div class="col-span-4 p-space-sm rounded-lg bg-surface-variant/30">
+<div class="flex items-center gap-space-xs text-outline font-label-md text-label-md pb-1">
+<span class="material-symbols-outlined text-sm">remove_circle_outline</span> Entrega y salida
+              </div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                Entregan acceso y manual PDF. Si los colaboradores rechazan la plataforma o vuelven al papel, no es su responsabilidad.
+              </p>
+</div>
+</div>
+<!-- Row 3 -->
+<div class="grid grid-cols-12 gap-space-md py-space-md border-b border-surface-container items-start">
+<div class="col-span-4">
+<span class="font-headline-sm text-headline-sm text-primary block">Diseño técnico</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Escalabilidad y costos de nube a largo plazo.</span>
+</div>
+<div class="col-span-4 p-space-sm rounded-lg bg-surface-container-low/70">
+<div class="flex items-center gap-space-xs text-secondary font-label-md text-label-md pb-1">
+<span class="material-symbols-outlined text-sm">check_circle</span> Arquitectura limpia
+              </div>
+<p class="font-body-md text-body-md text-on-surface">
+                Elegimos la infraestructura justa para optimizar costos de servidor, garantizar mantenibilidad y portabilidad total de la propiedad.
+              </p>
+</div>
+<div class="col-span-4 p-space-sm rounded-lg bg-surface-variant/30">
+<div class="flex items-center gap-space-xs text-outline font-label-md text-label-md pb-1">
+<span class="material-symbols-outlined text-sm">remove_circle_outline</span> Sobredimensionamiento
+              </div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                Suelen usar stacks de moda que encarecen el mantenimiento, crean dependencia técnica o inflan facturas en la nube.
+              </p>
+</div>
+</div>
+<!-- Row 4 -->
+<div class="grid grid-cols-12 gap-space-md py-space-md items-start">
+<div class="col-span-4">
+<span class="font-headline-sm text-headline-sm text-primary block">Métrica de Éxito</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Cómo sabemos si ganamos juntos.</span>
+</div>
+<div class="col-span-4 p-space-sm rounded-lg bg-surface-container-low/70">
+<div class="flex items-center gap-space-xs text-secondary font-label-md text-label-md pb-1">
+<span class="material-symbols-outlined text-sm">check_circle</span> Impacto en negocio
+              </div>
+<p class="font-body-md text-body-md text-on-surface">
+                Tiempo ahorrado, tasa de adopción real, reducción de errores operativos y aumento de la capacidad de venta.
+              </p>
+</div>
+<div class="col-span-4 p-space-sm rounded-lg bg-surface-variant/30">
+<div class="flex items-center gap-space-xs text-outline font-label-md text-label-md pb-1">
+<span class="material-symbols-outlined text-sm">remove_circle_outline</span> Horas facturadas
+              </div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                Cantidad de tickets cerrados, líneas de código y horas consumidas del presupuesto pactado.
+              </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- FAQ SECTION: ACORDEÓN INTERACTIVO -->
+<section class="w-full py-space-xl bg-surface">
+<div class="max-w-4xl mx-auto px-margin-mobile lg:px-margin flex flex-col gap-space-lg">
+<div class="flex flex-col items-center text-center gap-space-xs">
+<span class="font-label-md text-label-md text-secondary uppercase tracking-wider">Claridad Total</span>
+<h2 class="font-headline-lg text-headline-lg text-primary">Preguntas Frecuentes sobre nuestros Servicios</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+          Respuestas transparentes sobre cómo trabajamos, tiempos estimados y condiciones.
+        </p>
+</div>
+<!-- Accordion Items Container -->
+<div class="flex flex-col gap-space-sm" id="faq-accordion">
+<!-- FAQ 1 -->
+<div class="faq-item rounded-xl bg-surface-container-lowest shadow-sm overflow-hidden transition-all">
+<button class="faq-toggle w-full p-space-lg flex items-center justify-between text-left gap-space-md cursor-pointer hover:bg-surface-container-low/40 transition-colors" type="button">
+<span class="font-headline-sm text-headline-sm text-primary">¿Qué pasa si ya tenemos software desarrollado o contratado?</span>
+<span class="faq-icon material-symbols-outlined text-secondary transition-transform duration-200">expand_more</span>
+</button>
+<div class="faq-content max-h-0 overflow-hidden transition-all duration-300 px-space-lg">
+<div class="pb-space-lg text-on-surface-variant font-body-lg text-body-lg space-y-2">
+<p>
+                No necesitas empezar desde cero ni desechar tu inversión anterior. Realizamos una <strong>auditoría de sistemas y procesos</strong> para identificar qué piezas son rescatables, qué integraciones faltan y cómo conectar tu software existente mediante APIs o capas de datos intermedias sin frenar tu operación.
+              </p>
+</div>
+</div>
+</div>
+<!-- FAQ 2 -->
+<div class="faq-item rounded-xl bg-surface-container-lowest shadow-sm overflow-hidden transition-all">
+<button class="faq-toggle w-full p-space-lg flex items-center justify-between text-left gap-space-md cursor-pointer hover:bg-surface-container-low/40 transition-colors" type="button">
+<span class="font-headline-sm text-headline-sm text-primary">¿Cuánto dura un proyecto típico con Semilla Lab?</span>
+<span class="faq-icon material-symbols-outlined text-secondary transition-transform duration-200">expand_more</span>
+</button>
+<div class="faq-content max-h-0 overflow-hidden transition-all duration-300 px-space-lg">
+<div class="pb-space-lg text-on-surface-variant font-body-lg text-body-lg space-y-2">
+<p>
+                Trabajamos mediante ciclos de valor orientados por la <strong>Metodología Cultivar</strong>:
+              </p>
+<ul class="list-disc pl-5 space-y-1">
+<li><strong>Diagnóstico y Mapeo de Procesos:</strong> 2 a 3 semanas con entregables ejecutivos inmediatos.</li>
+<li><strong>Primer Release Funcional (MVP Operativo):</strong> Entre 6 y 10 semanas, lo que permite que tu equipo comience a usar la solución y ver retornos rápidos.</li>
+<li><strong>Consolidación y Escala:</strong> Módulos incrementales de 4 a 6 semanas según tu plan estratégico.</li>
+</ul>
+</div>
+</div>
+</div>
+<!-- FAQ 3 -->
+<div class="faq-item rounded-xl bg-surface-container-lowest shadow-sm overflow-hidden transition-all">
+<button class="faq-toggle w-full p-space-lg flex items-center justify-between text-left gap-space-md cursor-pointer hover:bg-surface-container-low/40 transition-colors" type="button">
+<span class="font-headline-sm text-headline-sm text-primary">¿Mi equipo interno necesita conocimientos técnicos avanzados?</span>
+<span class="faq-icon material-symbols-outlined text-secondary transition-transform duration-200">expand_more</span>
+</button>
+<div class="faq-content max-h-0 overflow-hidden transition-all duration-300 px-space-lg">
+<div class="pb-space-lg text-on-surface-variant font-body-lg text-body-lg space-y-2">
+<p>
+<strong>No.</strong> Nuestro trabajo incluye diseñar interfaces intuitivas que cualquier persona acostumbrada a usar un smartphone o correo pueda dominar en pocas horas. Además, creamos guías visuales en video y documentación viva para que las nuevas contrataciones se incorporen sin fricción.
+              </p>
+</div>
+</div>
+</div>
+<!-- FAQ 4 -->
+<div class="faq-item rounded-xl bg-surface-container-lowest shadow-sm overflow-hidden transition-all">
+<button class="faq-toggle w-full p-space-lg flex items-center justify-between text-left gap-space-md cursor-pointer hover:bg-surface-container-low/40 transition-colors" type="button">
+<span class="font-headline-sm text-headline-sm text-primary">¿Cómo garantizan que la gente realmente use el nuevo sistema?</span>
+<span class="faq-icon material-symbols-outlined text-secondary transition-transform duration-200">expand_more</span>
+</button>
+<div class="faq-content max-h-0 overflow-hidden transition-all duration-300 px-space-lg">
+<div class="pb-space-lg text-on-surface-variant font-body-lg text-body-lg space-y-2">
+<p>
+                Involucramos a los usuarios operativos desde la primera semana de diseño. No imponemos sistemas desde una torre de marfil: si el operario siente que el software le ahorra tiempo y le quita tareas burocráticas pesadas, la adopción se da por conveniencia real, no por obligación directiva.
+              </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA DE CIERRE ESTRATÉGICO -->
+<section class="w-full py-space-xl bg-surface-container-low">
+<div class="max-w-5xl mx-auto px-margin-mobile lg:px-margin">
+<div class="relative bg-surface-container-lowest rounded-xl p-space-lg lg:p-space-xl shadow-md overflow-hidden flex flex-col md:flex-row items-center justify-between gap-space-lg">
+<!-- Left Content -->
+<div class="flex flex-col gap-space-sm max-w-xl">
+<div class="inline-flex items-center gap-space-xs text-secondary font-label-md text-label-md uppercase tracking-wider">
+<span class="material-symbols-outlined text-sm">calendar_month</span>
+            Sesión de Valoración Sin Compromiso
+          </div>
+<h2 class="font-headline-lg text-headline-lg text-primary">
+            Descubre qué servicio necesita tu empresa con nuestro diagnóstico sin costo
+          </h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+            En 30 minutos revisamos tu esquema actual de procesos y software, detectamos los 3 cuellos de botella más costosos y te orientamos con un plan de acción viable.
+          </p>
+</div>
+<!-- Right Action Points -->
+<div class="flex flex-col sm:flex-row md:flex-col gap-space-sm shrink-0 w-full md:w-auto">
+<a class="inline-flex items-center justify-center px-space-lg py-space-md rounded-full bg-on-tertiary-container text-primary-container font-label-lg text-label-lg shadow-md hover:shadow-lg transition-all text-center" data-path="diagnostico-gratis" href="/diagnostico-gratis">
+            Agendar diagnóstico gratuito
+          </a>
+<a class="inline-flex items-center justify-center gap-space-xs px-space-lg py-space-md rounded-full bg-surface-container text-primary font-label-lg text-label-lg hover:bg-surface-container-high transition-colors text-center" href="https://wa.me/573001234567" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-secondary">chat</span>
+            Consultar por WhatsApp
+          </a>
+</div>
+</div>
+</div>
+</section>
+<!-- SCRIPT PARA EL ACORDEÓN DE PREGUNTAS FRECUENTES -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggles = document.querySelectorAll('.faq-toggle');
+
+      toggles.forEach(toggle => {
+        toggle.addEventListener('click', () => {
+          const content = toggle.nextElementSibling;
+          const icon = toggle.querySelector('.faq-icon');
+          const isExpanded = content.style.maxHeight && content.style.maxHeight !== '0px';
+
+          // Close all open items for clean exclusive accordion experience
+          document.querySelectorAll('.faq-content').forEach(c => {
+            c.style.maxHeight = null;
+          });
+          document.querySelectorAll('.faq-icon').forEach(i => {
+            i.style.transform = 'rotate(0deg)';
+          });
+
+          if (!isExpanded) {
+            content.style.maxHeight = content.scrollHeight + 'px';
+            icon.style.transform = 'rotate(180deg)';
+          }
+        });
+      });
+    });
+  </script>
+</div></main><footer class="w-full bg-surface-container-low text-on-surface-variant py-space-xl shadow-[0_1px_8px_rgba(0,0,0,0.02)]"><div class="max-w-7xl mx-auto px-margin-mobile lg:px-margin"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-gutter mb-space-xl"><div class="lg:col-span-2 flex flex-col gap-space-md"><div class="flex items-center gap-space-sm"><img alt="Semilla Lab Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrBZQYgRKK8a4nG5M7gbJN7boVpORc5GzOWTz9JOAS5uLrQD6OwHiv74XcJS1lPrVp4C4l8XFD9arSBs2E3TYB8myK9kgjdWzHH8NxtMDsdgvBARRvWkd-rY5FKUMaVEW_d6EWmMG0yTEQliCx6GLxgm9xB2UHoENzH7eIIQ30XUuV5paq6UARJbY9E_sYqgw8P0VE3DRpW7TmGVs5JUUSlLgtfimCXNLnSCgrEHpNI"/><span class="font-headline-sm text-headline-sm text-primary tracking-tight">Semilla Lab</span></div><p class="font-body-md text-body-md max-w-sm text-on-surface-variant">Ayudamos a las empresas a ordenarse, centralizar su información y construir arquitectura sólida para crecer con confianza.</p><div class="flex flex-wrap items-center gap-space-sm pt-space-xs"><span class="inline-flex items-center gap-space-xs px-space-sm py-space-xs rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface"><span class="material-symbols-outlined text-secondary">location_on</span>Sede Bogotá, Colombia 🇨🇴</span><a class="inline-flex items-center gap-space-xs px-space-sm py-space-xs rounded-full bg-surface-container font-label-sm text-label-sm text-primary hover:text-on-surface transition-colors" href="https://wa.me/573001234567"><span class="material-symbols-outlined text-secondary">phone</span>+57 300 123 4567</a></div></div><div class="flex flex-col gap-space-sm"><h4 class="font-label-lg text-label-lg text-primary tracking-wide uppercase">Servicios</h4><ul class="flex flex-col gap-space-xs font-body-md text-body-md"><li class="hover:text-primary transition-colors"><a data-path="servicios" href="/servicios">Consultoría y Orden</a></li><li class="hover:text-primary transition-colors"><a data-path="servicios" href="/servicios">Arquitectura de Software</a></li><li class="hover:text-primary transition-colors"><a data-path="servicios" href="/servicios">Desarrollo a la Medida</a></li><li class="hover:text-primary transition-colors"><a data-path="servicios" href="/servicios">Automatización y Datos</a></li></ul></div><div class="flex flex-col gap-space-sm"><h4 class="font-label-lg text-label-lg text-primary tracking-wide uppercase">Metodología y Casos</h4><ul class="flex flex-col gap-space-xs font-body-md text-body-md"><li class="hover:text-primary transition-colors"><a data-path="metodologia-cultivar" href="/metodologia-cultivar">Método Cultivar</a></li><li class="hover:text-primary transition-colors"><a data-path="casos-de-exito" href="/casos-de-exito">Antes y Después</a></li><li class="hover:text-primary transition-colors"><a data-path="casos-de-exito" href="/casos-de-exito">Historias de Clientes</a></li><li class="hover:text-primary transition-colors"><a data-path="recursos" href="#">Calculadora de Impacto</a></li></ul></div><div class="flex flex-col gap-space-sm"><h4 class="font-label-lg text-label-lg text-primary tracking-wide uppercase">Empresa y Recursos</h4><ul class="flex flex-col gap-space-xs font-body-md text-body-md"><li class="hover:text-primary transition-colors"><a data-path="nosotros" href="#">Nosotros</a></li><li class="hover:text-primary transition-colors"><a data-path="nosotros" href="#">Filosofía</a></li><li class="hover:text-primary transition-colors"><a data-path="recursos" href="#">Guías y Plantillas gratuitas</a></li><li class="hover:text-primary transition-colors"><a data-path="recursos" href="#">Blog Técnico</a></li><li class="hover:text-primary transition-colors"><a data-path="diagnostico-gratis" href="/diagnostico-gratis">Diagnóstico sin costo</a></li></ul></div></div><div class="pt-space-lg flex flex-col sm:flex-row items-center justify-between gap-space-md bg-surface-container/50 px-space-md py-space-sm rounded-lg font-body-md text-body-md text-on-surface-variant"><p class="text-center sm:text-left">© 2025 Semilla Lab S.A.S. - Arquitectura de software y consultoría de procesos. Hecho con orgullo en Colombia.</p><div class="flex items-center gap-space-md"><a class="hover:text-primary transition-colors font-label-sm text-label-sm" href="#">Términos</a><a class="hover:text-primary transition-colors font-label-sm text-label-sm" href="#">Privacidad</a></div></div></div></footer></body></html>
