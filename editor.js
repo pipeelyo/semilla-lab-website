@@ -46,6 +46,28 @@
     #cms-rt{position:fixed;z-index:9999;display:none;gap:2px;background:#1c1917;border-radius:8px;padding:4px;box-shadow:0 6px 18px #0004}
     #cms-rt button{all:unset;cursor:pointer;color:#fff;font:13px/26px system-ui,sans-serif;padding:0 8px;border-radius:5px}
     #cms-rt button:hover{background:#44403c}
+    #cms-lib{position:fixed;inset:0;z-index:10000;background:#0c0a0999;display:flex;align-items:center;justify-content:center;padding:24px}
+    .cms-lib-box{background:#fff;border-radius:16px;width:min(1100px,100%);max-height:100%;display:flex;flex-direction:column;font:14px system-ui,sans-serif;color:#1c1917;box-shadow:0 20px 60px #0006}
+    .cms-lib-head{display:flex;gap:12px;align-items:baseline;padding:16px 20px;border-bottom:1px solid #e7e5e4}
+    .cms-lib-head span{color:#78716c;flex:1}
+    .cms-lib-head button{all:unset;cursor:pointer;padding:4px 10px;border-radius:8px;border:1px solid #d6d3d1}
+    .cms-lib-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;padding:20px;overflow:auto}
+    .cms-lib-card{all:unset;cursor:pointer;display:flex;flex-direction:column;gap:4px;border:1px solid #e7e5e4;border-radius:12px;padding:8px}
+    .cms-lib-card:hover,.cms-lib-card:focus-visible{border-color:#16a34a;box-shadow:0 0 0 3px #bbf7d0}
+    .cms-lib-card small{color:#78716c}
+    .cms-lib-thumb{height:180px;overflow:hidden;border-radius:8px;background:#f5f5f4;pointer-events:none}
+    .cms-lib-scale{width:1280px;transform:scale(.25);transform-origin:0 0}
+    #cms-link{position:fixed;z-index:9999;display:none;gap:8px;align-items:center;max-width:380px;background:#1c1917;color:#fff;font:13px/1.35 system-ui,sans-serif;padding:8px 10px;border-radius:10px;box-shadow:0 8px 24px #0005}
+    #cms-link b{color:#bbf7d0;font-weight:600}
+    #cms-link .cms-warn b{color:#fdba74}
+    #cms-link button{all:unset;cursor:pointer;background:#15803d;color:#fff;border-radius:6px;padding:3px 9px;white-space:nowrap}
+    #cms-link .cms-cancel{background:#44403c}
+    .cms-link-form{display:flex;flex-direction:column;gap:8px;width:340px}
+    .cms-link-form label{display:flex;flex-direction:column;gap:4px}
+    .cms-link-form .cms-row{flex-direction:row;display:flex;gap:6px;align-items:center}
+    .cms-link-form select,.cms-link-form input:not([type=checkbox]){font:inherit;color:#1c1917;background:#fff;border-radius:6px;border:0;padding:5px 6px}
+    .cms-link-form [hidden]{display:none}
+    .cms-err{color:#fca5a5}
     #cms-hint{position:fixed;z-index:9998;pointer-events:none;background:#14532d;color:#fff;font:13px/1.3 system-ui,sans-serif;padding:6px 10px;border-radius:8px;box-shadow:0 4px 12px #0003;max-width:280px;display:none}
     #cms-bar .cms-legend{display:flex;gap:6px;font-size:12px;color:#57534e}
     #cms-bar .cms-legend b{color:#fff;border-radius:4px;padding:0 5px}
@@ -78,15 +100,18 @@
   bar.querySelector('.cms-exit').onclick = () => (location.href = location.pathname);
 
   // --- Texts ------------------------------------------------------------
-  for (const el of document.body.querySelectorAll('*')) {
-    if (el.closest('script,style,svg,[data-cms],.material-symbols-outlined')) continue;
-    if ([...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim())) {
-      el.contentEditable = 'true';
-      el.dataset.cmsEdit = '';
+  const makeEditable = (root) => {
+    for (const el of root.querySelectorAll('*')) {
+      if (el.closest('script,style,svg,[data-cms],.material-symbols-outlined')) continue;
+      if ([...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim())) {
+        el.contentEditable = 'true';
+        el.dataset.cmsEdit = '';
+      }
     }
-  }
-  // Icons are font ligatures: editing their text would break them.
-  document.querySelectorAll('.material-symbols-outlined').forEach((i) => (i.contentEditable = 'false'));
+    // Icons are font ligatures: editing their text would break them.
+    root.querySelectorAll('.material-symbols-outlined').forEach((i) => (i.contentEditable = 'false'));
+  };
+  makeEditable(document.body);
   document.body.addEventListener('input', (e) => { if (!e.target.closest('[data-cms]')) markDirty(); });
 
   // Links, buttons and forms must not navigate or submit while editing.
@@ -125,18 +150,17 @@
   const sig = (el) => `${el.tagName}|${String(el.className).split(/\s+/).filter((c) => c && !c.startsWith('cms-')).slice(0, 2).join(' ')}`;
   const kidsOf = (el) => [...el.children].filter((c) => !c.matches('script,style,[data-cms]'));
   const sectionsList = document.querySelector('main section')?.parentElement;
-  const lists = sectionsList ? [[sectionsList, kidsOf(sectionsList)]] : [];
-  for (const el of document.querySelectorAll('main *')) {
-    if (el === sectionsList || el.closest('svg,[data-cms]')) continue;
+  const findLists = (root) => [...root.querySelectorAll('*')].flatMap((el) => {
+    if (el === sectionsList || el.closest('svg,[data-cms]')) return [];
     const kids = kidsOf(el);
-    if (kids.length < 2) continue;
+    if (kids.length < 2) return [];
     const groups = {};
     kids.forEach((k) => (groups[sig(k)] ||= []).push(k));
     const items = Object.values(groups).sort((a, b) => b.length - a.length)[0];
     // Nearly-uniform groups only; layout columns (col-span-*) are cells of a row, not blocks to move.
     const uniform = items.length === kids.length || (kids.length >= 4 && items.length >= kids.length - 1);
-    if (items.length >= 2 && uniform && !INLINE.test(items[0].tagName) && !/\bcol-span-/.test(items[0].className)) lists.push([el, items]);
-  }
+    return items.length >= 2 && uniform && !INLINE.test(items[0].tagName) && !/\bcol-span-/.test(items[0].className) ? [[el, items]] : [];
+  });
 
   // Only the innermost block under the mouse shows its buttons.
   let hot = null;
@@ -168,7 +192,7 @@
       tools.className = 'cms-tools';
       tools.dataset.cms = '';
       tools.contentEditable = 'false';
-      tools.innerHTML = `<button class="cms-move" data-cms-list="${i}" title="Arrastrar para cambiar el orden">⠿ Mover${isSec ? ' sección' : ''}</button><button class="cms-dup" title="Agregar una copia debajo para editarla">＋ Duplicar</button><button class="cms-del" title="Eliminar">✕</button>`;
+      tools.innerHTML = `<button class="cms-move" data-cms-list="${i}" title="Arrastrar para cambiar el orden">⠿ Mover${isSec ? ' sección' : ''}</button>${isSec ? '<button class="cms-new" title="Insertar debajo una sección con otro diseño">＋ Nueva sección</button>' : ''}<button class="cms-dup" title="Agregar una copia debajo para editarla">＋ Duplicar</button><button class="cms-del" title="Eliminar">✕</button>`;
       const move = tools.querySelector('.cms-move');
       move.addEventListener('mouseenter', showZone);
       move.addEventListener('mouseleave', hideZone);
@@ -184,6 +208,7 @@
           .forEach((l) => setupList(l, kidsOf(l).filter((k) => k.matches('.cms-item')), false));
         markDirty();
       };
+      if (isSec) tools.querySelector('.cms-new').onclick = () => openLibrary(item);
       tools.querySelector('.cms-del').onclick = () => {
         if (kidsOf(list).filter((k) => k.matches('.cms-item,.cms-sec')).length < 2) return alert('Debe quedar al menos un bloque en este grupo.');
         if (!confirm('¿Eliminar este bloque? Podrás recuperarlo si sales sin guardar.')) return;
@@ -203,8 +228,67 @@
       onStart: () => { dragging = true; list.classList.add('cms-zone'); hint.style.display = 'none'; },
       onEnd: (e) => { dragging = false; hideZone(); if (e.oldIndex !== e.newIndex) markDirty(); },
     });
+    return addTools;
   };
-  lists.forEach(([list, items], n) => setupList(list, items, n === 0 && list === sectionsList));
+  const addSectionTools = sectionsList && setupList(sectionsList, kidsOf(sectionsList), true);
+  findLists(document.querySelector('main')).forEach(([list, items]) => setupList(list, items, false));
+
+  // --- Section library: every section design from the original pages -----
+  let library;
+  const loadLibrary = () => (library ||= Promise.all(Object.entries(PAGES).map(async ([s, name]) => {
+    const doc = new DOMParser().parseFromString(await (await fetch(`/pages/${s}.html`)).text(), 'text/html');
+    const scripts = [...doc.body.querySelectorAll('script:not([src])')].map((x) => x.textContent);
+    return [...doc.querySelectorAll('main section')].map((sec) => ({
+      sec, name, scripts,
+      title: sec.querySelector('h1,h2,h3')?.textContent.trim().replace(/\s+/g, ' ') || 'Sección',
+    }));
+  })).then((a) => a.flat()));
+
+  async function openLibrary(after) {
+    const modal = document.createElement('div');
+    modal.id = 'cms-lib';
+    modal.dataset.cms = '';
+    modal.innerHTML = `<div class="cms-lib-box"><div class="cms-lib-head"><strong>Elige el diseño de la nueva sección</strong><span>Se insertará debajo de la sección actual y luego editas su contenido.</span><button class="cms-lib-x">Cerrar ✕</button></div><div class="cms-lib-grid">Cargando diseños…</div></div>`;
+    document.body.append(modal);
+    const close = () => { modal.remove(); removeEventListener('keydown', onKey); };
+    const onKey = (e) => e.key === 'Escape' && close();
+    addEventListener('keydown', onKey);
+    modal.querySelector('.cms-lib-x').onclick = close;
+    modal.onclick = (e) => e.target === modal && close();
+
+    const grid = modal.querySelector('.cms-lib-grid');
+    let items;
+    try { items = await loadLibrary(); } catch { library = null; grid.textContent = 'No se pudieron cargar los diseños. Intenta de nuevo.'; return; }
+    grid.textContent = '';
+    for (const it of items) {
+      const card = document.createElement('button');
+      card.className = 'cms-lib-card';
+      card.innerHTML = '<div class="cms-lib-thumb"><div class="cms-lib-scale"></div></div><b></b><small></small>';
+      card.querySelector('b').textContent = it.title;
+      card.querySelector('small').textContent = `Diseño de: ${it.name}`;
+      card.querySelector('.cms-lib-scale').append(document.importNode(it.sec, true));
+      card.onclick = () => { close(); insertSection(it, after); };
+      grid.append(card);
+    }
+  }
+
+  function insertSection(it, after) {
+    const sec = document.importNode(it.sec, true);
+    after.after(sec);
+    // Bring the source page's behaviour (FAQ, filters, wizard) along. Inserted as markup so it
+    // does not run now, only when the saved page loads.
+    const existing = [...document.body.querySelectorAll('script:not([src])')].map((x) => x.textContent);
+    const anchor = document.querySelector('script[src="/editor.js"]');
+    for (const code of it.scripts) {
+      if (existing.includes(code) || /<\/script/i.test(code)) continue;
+      anchor ? anchor.insertAdjacentHTML('beforebegin', `<script>${code}</script>`) : document.body.insertAdjacentHTML('beforeend', `<script>${code}</script>`);
+    }
+    makeEditable(sec);
+    addSectionTools(sec);
+    findLists(sec).forEach(([list, items]) => setupList(list, items, false));
+    markDirty();
+    sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 
   // --- Rich text --------------------------------------------------------
   const rt = document.createElement('div');
@@ -244,6 +328,132 @@
     e.preventDefault();
     document.execCommand('insertText', false, e.clipboardData.getData('text/plain'));
   });
+
+  // --- Link inspector: where each button/link goes, and change it ---------
+  const WA_DEFAULT = 'https://wa.me/573196664089';
+  const pagePath = (s) => (s === 'index' ? '/' : `/${s}`);
+  const headingOf = (sec) => sec.querySelector('h1,h2,h3')?.textContent.trim().replace(/\s+/g, ' ') || 'Sección';
+  const linkLabel = (href) => {
+    if (!href || href === '#') return null;
+    const page = Object.keys(PAGES).find((s) => pagePath(s) === href.replace(/\/$/, '') || (s === 'index' && href === '/'));
+    if (page) return `Página «${PAGES[page]}»`;
+    if (/wa\.me|whatsapp/i.test(href)) return `WhatsApp (${href.replace(/\D/g, '').replace(/^57/, '+57 ')})`;
+    if (href.startsWith('#')) { const t = document.getElementById(href.slice(1)); return `Sección de esta página: «${t ? headingOf(t) : href}»`; }
+    if (href.startsWith('mailto:')) return `Correo a ${href.slice(7)}`;
+    if (href.startsWith('tel:')) return `Llamada a ${href.slice(4)}`;
+    try { return `Sitio externo: ${new URL(href, location.href).host}`; } catch { return href; }
+  };
+  const buttonLabel = (b) =>
+    b.matches('.faq-toggle') ? 'abre o cierra la respuesta de esta pregunta'
+      : b.dataset.filter ? `filtra los casos por «${b.textContent.trim()}»`
+      : /goToStep|validateStep|nextStep|prevStep/.test(b.getAttribute('onclick') || '') ? 'avanza o retrocede en los pasos del diagnóstico'
+      : /selectSymptom/.test(b.getAttribute('onclick') || '') ? 'muestra la recomendación para ese síntoma'
+      : b.type === 'submit' || b.closest('form') ? 'envía el formulario'
+      : 'acción interactiva de esta sección';
+
+  const chip = document.createElement('div');
+  chip.id = 'cms-link';
+  chip.dataset.cms = '';
+  document.body.append(chip);
+  let chipFor = null, editing = false, hideT;
+
+  const place = () => {
+    const r = chipFor.getBoundingClientRect();
+    Object.assign(chip.style, { display: 'flex', left: `${Math.max(8, Math.min(r.left, innerWidth - 380))}px`, top: `${Math.min(r.bottom + 6, innerHeight - chip.offsetHeight - 70)}px` });
+  };
+  function showInfo(el) {
+    clearTimeout(hideT);
+    if (editing || (chipFor === el && chip.style.display === 'flex')) return;
+    chipFor = el;
+    if (el.tagName === 'BUTTON') {
+      chip.innerHTML = '<span>⚙ Botón interactivo: <b></b>. No lleva a otra página.</span>';
+      chip.querySelector('b').textContent = buttonLabel(el);
+    } else {
+      const label = linkLabel(el.getAttribute('href'));
+      chip.innerHTML = `<span class="${label ? '' : 'cms-warn'}">🔗 Lleva a: <b></b></span><button class="cms-link-edit">Cambiar destino</button>`;
+      chip.querySelector('b').textContent = (label || '⚠ Sin destino, no hace nada al hacer clic') + (el.target === '_blank' ? ' · pestaña nueva' : '');
+      chip.querySelector('.cms-link-edit').onclick = () => editLink(el);
+    }
+    place();
+  }
+  const hideSoon = () => { clearTimeout(hideT); hideT = setTimeout(() => { if (!editing) chip.style.display = 'none'; }, 500); };
+
+  document.addEventListener('mouseover', (e) => {
+    if (e.target.closest?.('#cms-link')) return clearTimeout(hideT);
+    const el = !e.target.closest?.('[data-cms]') && e.target.closest?.('a[href],button');
+    el ? showInfo(el) : hideSoon();
+  });
+  document.addEventListener('focusin', (e) => {
+    const el = !e.target.closest('[data-cms]') && e.target.closest('a[href],button');
+    if (el) showInfo(el);
+  });
+  addEventListener('scroll', () => { if (!editing) chip.style.display = 'none'; }, { passive: true });
+
+  function editLink(a) {
+    editing = true;
+    const href = a.getAttribute('href') || '#';
+    const sections = [...document.querySelectorAll('main section')];
+    const kind = href === '#' ? '#' : Object.keys(PAGES).some((s) => pagePath(s) === href) ? href
+      : /wa\.me|whatsapp/i.test(href) ? 'wa' : href.startsWith('#') ? 'sec' : 'url';
+    chip.innerHTML = `
+      <div class="cms-link-form">
+        <label>¿A dónde debe llevar este botón?
+          <select class="cms-kind">
+            <optgroup label="Páginas del sitio">${Object.entries(PAGES).map(([s, n]) => `<option value="${pagePath(s)}">${n}</option>`).join('')}</optgroup>
+            <option value="wa">WhatsApp</option>
+            <option value="sec">Una sección de esta página</option>
+            <option value="url">Otra dirección (sitio externo, correo, teléfono)</option>
+            <option value="#">Sin destino</option>
+          </select></label>
+        <select class="cms-sec-pick">${sections.map((s, i) => `<option value="${i}"></option>`).join('')}</select>
+        <input class="cms-url" placeholder="https://… · mailto:correo@… · tel:+57…">
+        <label class="cms-row"><input type="checkbox" class="cms-blank"> Abrir en una pestaña nueva</label>
+        <span class="cms-err" role="alert"></span>
+        <div class="cms-row"><button class="cms-apply">Aplicar</button><button class="cms-cancel">Cancelar</button></div>
+      </div>`;
+    const $ = (q) => chip.querySelector(q);
+    $('.cms-sec-pick').querySelectorAll('option').forEach((o, i) => (o.textContent = headingOf(sections[i])));
+    $('.cms-kind').value = kind;
+    $('.cms-url').value = kind === 'wa' ? href : kind === 'url' ? href : '';
+    if (kind === 'sec') { const i = sections.findIndex((s) => `#${s.id}` === href); if (i >= 0) $('.cms-sec-pick').value = i; }
+    $('.cms-blank').checked = a.target === '_blank';
+    const sync = () => {
+      const k = $('.cms-kind').value;
+      $('.cms-sec-pick').hidden = k !== 'sec';
+      $('.cms-url').hidden = !(k === 'wa' || k === 'url');
+      if (k === 'wa' && !/wa\.me/.test($('.cms-url').value)) $('.cms-url').value = WA_DEFAULT;
+      if (k === 'url' && /wa\.me/.test($('.cms-url').value)) $('.cms-url').value = '';
+      $('.cms-err').textContent = '';
+      place();
+    };
+    $('.cms-kind').onchange = sync;
+    sync();
+    const done = () => { editing = false; chipFor = null; showInfo(a); };
+    $('.cms-cancel').onclick = done;
+    $('.cms-apply').onclick = () => {
+      const k = $('.cms-kind').value;
+      let next = k;
+      if (k === 'wa' || k === 'url') {
+        next = $('.cms-url').value.trim();
+        // Only real destinations: blocks javascript: and other schemes that would run code.
+        if (!/^(https?:\/\/[^\s]+|mailto:[^\s]+|tel:\+?[\d\s-]+)$/i.test(next)) return ($('.cms-err').textContent = 'Escribe una dirección que empiece por https://, mailto: o tel:');
+      }
+      if (k === 'sec') {
+        const sec = sections[$('.cms-sec-pick').value];
+        if (!sec.id) {
+          const base = headingOf(sec).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'seccion';
+          let id = base, n = 2;
+          while (document.getElementById(id)) id = `${base}-${n++}`;
+          sec.id = id;
+        }
+        next = `#${sec.id}`;
+      }
+      a.setAttribute('href', next);
+      if ($('.cms-blank').checked) { a.target = '_blank'; a.rel = 'noopener'; } else { a.removeAttribute('target'); a.removeAttribute('rel'); }
+      markDirty();
+      done();
+    };
+  }
 
   // --- Save -------------------------------------------------------------
   saveBtn.onclick = async () => {
